@@ -7,6 +7,7 @@ class Kunai(pygame.sprite.Sprite):
     def __init__(self, ninja):
         super().__init__()
         self.velocity = 6
+        self.attack = 10
         self.ninja = ninja
         self.image = pygame.image.load('assets/kunai.png')
         self.image = pygame.transform.scale(self.image, (50, 10))
@@ -21,8 +22,10 @@ class Kunai(pygame.sprite.Sprite):
 
     def move(self):
         self.rect.x += self.velocity
-        if self.ninja.game.check_collision(self, self.ninja.game.all_zombie_male):
+
+        for monster in self.ninja.game.check_collision(self, self.ninja.game.all_zombie):
             self.remove()
+            monster.damage(self.attack)
 
         if self.rect.x > 1080:
             self.remove()

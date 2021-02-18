@@ -25,9 +25,26 @@ class Ninja(pygame.sprite.Sprite):
         self.all_projectiles = pygame.sprite.Group()
         self.velocity_damage = 20
 
+    def damage(self, amount):
+        self.health -= amount
+        if self.health <= 0:
+            self.game.game_over()
+
+    def update_health_bar(self, surface):
+        if self.health >= self.max_health*0.5:
+            bar_color = (0, 183, 74)
+        elif self.max_health * 0.2 < self.health < self.max_health*0.5:
+            bar_color = (255, 169, 0)
+        else:
+            bar_color = (249, 49, 84)
+
+        # Dessiner la barre de vie
+        pygame.draw.rect(surface, (46, 46, 46), [self.rect.x - 20, self.rect.y - 15, self.max_health, 7])
+        pygame.draw.rect(surface, bar_color, [self.rect.x - 20, self.rect.y - 15, self.health, 7])
+
     def move_right(self):
         # Si le joueur n'est pas en collision avec un ennemi déplacement à droite autorisé'
-        if not self.game.check_collision(self, self.game.all_zombie_male):
+        if not self.game.check_collision(self, self.game.all_zombie):
             self.rect.x += self.velocity
 
     def move_left(self):
@@ -35,12 +52,12 @@ class Ninja(pygame.sprite.Sprite):
 
         self.rect.x -= self.velocity
 
-    def jump(self):
-        self.rect.y -= self.jump_velocity
-        self.jump_velocity -= self.jump_deceleration
-        if self.jump_velocity < -20:
-            self.isJump = False
-            self.jump_velocity = 20
+    # def jump(self):
+    #     self.rect.y -= self.jump_velocity
+    #     self.jump_velocity -= self.jump_deceleration
+    #     if self.jump_velocity < -20:
+    #         self.isJump = False
+    #         self.jump_velocity = 20
 
     def launch_kunai(self):
         self.all_projectiles.add(Kunai(self))

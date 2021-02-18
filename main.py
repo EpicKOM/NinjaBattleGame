@@ -12,8 +12,15 @@ pygame.init()
 pygame.display.set_caption("Ninja Battle Game")
 screen = pygame.display.set_mode((1080, 720))
 background = pygame.image.load('assets/bg.jpg')
+banner = pygame.image.load('assets/banner.png')
+banner = pygame.transform.scale(banner, (700, 465))
+banner_width = banner.get_width()
+play_button = pygame.image.load('assets/button.png')
+play_button = pygame.transform.scale(play_button, (400, 150))
+play_button_rect = play_button.get_rect()
+play_button_rect.x = (screen.get_width() - play_button.get_width())/2
+play_button_rect.y = 450
 
-# Charger le jeu
 game = Game()
 
 running = True
@@ -24,24 +31,13 @@ while running:
     # Appliquer l'arrière plan du jeu
     screen.blit(background, (-1300, -200))
 
-    # Appliquer l'image du joueur
-    screen.blit(game.player.image, game.player.rect)
-
-    for zombie_male in game.all_zombie_male:
-        zombie_male.forward()
-    # Appliquer les images des monstres de type zombie male
-    game.all_zombie_male.draw(screen)
-
-    for kunai in game.player.all_projectiles:
-        kunai.move()
-    # Appliquer l'image du kunai
-    game.player.all_projectiles.draw(screen)
-
-    # Contrôle de la direction du joueur.
-    if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x < screen.get_width() - game.player.rect.width:
-        game.player.move_right()
-    elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:
-        game.player.move_left()
+    # Vérifier si le jeu a commencé.
+    if game.status:
+        game.update(screen)
+    else:
+        # Ecran de bienvenue
+        screen.blit(banner, ((screen.get_width()-banner_width)/2, 50))
+        screen.blit(play_button, play_button_rect)
 
     # Mise à jour de l'écran
     pygame.time.delay(10)
@@ -62,8 +58,8 @@ while running:
                 running = False
                 pygame.quit()
             # Fnction sauter du joueur
-            elif event.key == pygame.K_SPACE:
-                game.player.isJump = True
+            # elif event.key == pygame.K_SPACE:
+            #     game.player.isJump = True
 
             elif event.key == pygame.K_d:
                 game.player.launch_kunai()
@@ -71,8 +67,13 @@ while running:
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False
 
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if play_button_rect.collidepoint(event.pos):
+                game.start()
+
+
     # Contrôle du saut du joueur
-    if game.player.isJump:
-        game.player.jump()
+    # if game.player.isJump:
+    #     game.player.jump()
 
 
