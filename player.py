@@ -2,7 +2,7 @@
 
 # ------Importation des bibliothèques ----------------------------------------------------------------------------------
 import pygame
-from projectile import Kunai
+from projectile import Kunai, Fireball, Superkunai
 
 
 # Classe représentant le personnage principal (Un Ninja)
@@ -12,6 +12,8 @@ class Ninja(pygame.sprite.Sprite):
         self.game = game
         self.max_health = 100
         self.health = 100
+        self.max_magic = 200
+        self.magic = 200
         self.attack = 10
         self.velocity = 5
         self.isJump = False
@@ -22,13 +24,24 @@ class Ninja(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 505
         self.rect.y = 550
-        self.all_projectiles = pygame.sprite.Group()
-        self.velocity_damage = 20
+        self.all_kunai = pygame.sprite.Group()
+        self.all_fireball = pygame.sprite.Group()
+        self.all_superkunai = pygame.sprite.Group()
+
+    def magic_power(self, magic_amount):
+        if self.magic < self.max_magic:
+            self.magic += magic_amount*0.2
+        if self.max_magic > self.max_magic:
+            self.max_magic = self.max_magic
 
     def damage(self, amount):
         self.health -= amount
         if self.health <= 0:
             self.game.game_over()
+
+    def magic_progress_bar(self, surface):
+        pygame.draw.rect(surface, (46, 46, 46), [80, 50, self.max_magic, 10])
+        pygame.draw.rect(surface, (18, 102, 241), [80, 50, self.magic, 10])
 
     def update_health_bar(self, surface):
         if self.health >= self.max_health*0.5:
@@ -52,16 +65,25 @@ class Ninja(pygame.sprite.Sprite):
 
         self.rect.x -= self.velocity
 
-    # def jump(self):
-    #     self.rect.y -= self.jump_velocity
-    #     self.jump_velocity -= self.jump_deceleration
-    #     if self.jump_velocity < -20:
-    #         self.isJump = False
-    #         self.jump_velocity = 20
+    def jump(self):
+        self.rect.y -= self.jump_velocity
+        self.jump_velocity -= self.jump_deceleration
+        if self.jump_velocity < -20:
+            self.isJump = False
+            self.jump_velocity = 20
 
     def launch_kunai(self):
-        self.all_projectiles.add(Kunai(self))
+        self.all_kunai.add(Kunai(self))
 
+    def launch_fireball(self):
+        if self.magic > 100*0.2:
+            self.all_fireball.add(Fireball(self))
+            self.magic -= 100*0.2
+
+    def launch_superkunai(self):
+        if self.magic == 200:
+            self.all_superkunai.add(Superkunai(self))
+            self.magic -= 200
 
 
 

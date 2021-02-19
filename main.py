@@ -19,7 +19,11 @@ play_button = pygame.image.load('assets/button.png')
 play_button = pygame.transform.scale(play_button, (400, 150))
 play_button_rect = play_button.get_rect()
 play_button_rect.x = (screen.get_width() - play_button.get_width())/2
-play_button_rect.y = 450
+play_button_rect.y = 513
+magic = pygame.image.load('assets/magic.png')
+magic = pygame.transform.scale(magic, (40, 40))
+kill = pygame.image.load('assets/kill3.png')
+kill = pygame.transform.scale(kill, (40, 40))
 
 game = Game()
 
@@ -33,6 +37,8 @@ while running:
 
     # Vérifier si le jeu a commencé.
     if game.status:
+        screen.blit(magic, (20, 30))
+        screen.blit(kill, (20, 100))
         game.update(screen)
     else:
         # Ecran de bienvenue
@@ -58,11 +64,17 @@ while running:
                 running = False
                 pygame.quit()
             # Fnction sauter du joueur
-            # elif event.key == pygame.K_SPACE:
-            #     game.player.isJump = True
+            elif event.key == pygame.K_SPACE:
+                game.player.isJump = True
 
             elif event.key == pygame.K_d:
                 game.player.launch_kunai()
+
+            elif event.key == pygame.K_z:
+                game.player.launch_fireball()
+
+            elif event.key == pygame.K_q:
+                game.player.launch_superkunai()
 
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False
@@ -71,9 +83,9 @@ while running:
             if play_button_rect.collidepoint(event.pos):
                 game.start()
 
-
+    #
     # Contrôle du saut du joueur
-    # if game.player.isJump:
-    #     game.player.jump()
+    if game.player.isJump:
+        game.player.jump()
 
 
