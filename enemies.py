@@ -1,46 +1,43 @@
 import pygame
 import random
+import animation
 
 
-# Classe qui va gérer l'énemie de type Zombie male
-class Zombie(pygame.sprite.Sprite):
+class Zombie(animation.AnimateSprite):
     def __init__(self, game):
-        super().__init__()
+        super().__init__('zombie', 'male_idle_right')
         self.game = game
-        self.health = 50
-        self.max_health = 50
-        self.attack = 0.3
-        self.magic = 25
-        self.random_zombie = random.choice(['zombie_male', 'zombie_female'])
-        self.image = pygame.image.load('assets/{}.png'.format(self.random_zombie))
         self.image = pygame.transform.scale(self.image, (99, 120))
         self.rect = self.image.get_rect()
-        self.rect.x = 1000 + random.randint(0, 300)
         self.rect.y = 552
-        self.velocity = random.randint(1, 7)
+        self.velocity = 1  # random.randint(1, 4)
+        self.max_health = 50
+        self.health = 50
+        self.angle = 0
+        self.points = 10
 
-    def damage(self, amount, ultime):
+    def damage(self, amount):
         self.health -= amount
-        if ultime:
-            self.game.kill += 1
-            self.game.player.magic_power(self.magic)
-            self.rect.x = 4000
-            self.velocity = random.randint(1, 5)
-            self.health = self.max_health
 
-        else:
-            if self.health <= 0:
-                self.game.kill += 1
-                self.game.player.magic_power(self.magic)
-                self.rect.x = 1000 + random.randint(0, 500)
-                self.velocity = random.randint(1, 5)
-                self.health = self.max_health
-                self.random_zombie = random.choice(['zombie_male', 'zombie_female'])
+        # Si le zombie est K.O
+        if self.health <= 0:
+            self.game.kill += 1
+            self.game.total_points += self.points
+            self.health = self.max_health
+            if self in self.game.all_zombies_right:
+                self.random_zombie = random.choice(['zombie_male_right', 'zombie_female_right'])
                 self.image = pygame.image.load('assets/{}.png'.format(self.random_zombie))
                 self.image = pygame.transform.scale(self.image, (99, 120))
+                self.rect.x = 1080 + random.randint(0, 300)
+
+            elif self in self.game.all_zombies_left:
+                self.random_zombie = random.choice(['zombie_male_left', 'zombie_female_left'])
+                self.image = pygame.image.load('assets/{}.png'.format(self.random_zombie))
+                self.image = pygame.transform.scale(self.image, (99, 120))
+                self.rect.x = 0 - self.image.get_width() - random.randint(0, 300)
 
     def update_health_bar(self, surface):
-        if self.health >= self.max_health*0.5:
+        if self.health >= self.max_health * 0.5:
             bar_color = (0, 183, 74)
         elif self.max_health * 0.2 < self.health < self.max_health * 0.5:
             bar_color = (255, 169, 0)
@@ -51,18 +48,18 @@ class Zombie(pygame.sprite.Sprite):
         pygame.draw.rect(surface, (46, 46, 46), [self.rect.x, self.rect.y, self.max_health * 2, 5])
         pygame.draw.rect(surface, bar_color, [self.rect.x, self.rect.y, self.health*2, 5])
 
-    def forward(self):
-        if not self.game.check_collision(self, self.game.all_players):
-            self. rect.x -= self.velocity
-            if self.rect.x < 0:
-                for i in self.game.all_zombie:
-                    self.game.player.magic_power(self.magic)
-                    self.rect.x = 1000 + random.randint(0, 500)
-                    self.velocity = random.randint(1, 5)
-                    self.health = self.max_health
-                    self.random_zombie = random.choice(['zombie_male', 'zombie_female'])
-                    self.image = pygame.image.load('assets/{}.png'.format(self.random_zombie))
-                    self.image = pygame.transform.scale(self.image, (99, 120))
-        else:
-            self.game.player.damage(self.attack)
+    def move_right(self):
+        if not self.game.check_collision(self, self.game.player_group):
+            self.rect.x += self.velocity
+            self.start_animation()
 
+    def move_left(self):
+        if not self.game.check_collision(self, self.game.player_group):
+            self.rect.x -= self.velocity
+            self.start_animation()
+
+    def x(self):
+        return self.rect.x
+
+    def y(self):
+        return self.rect.y
