@@ -5,6 +5,7 @@
 
 
 import pygame
+import random
 from game import Game
 
 # Initialisation du module
@@ -48,13 +49,12 @@ while running:
 
     for zombie in game.all_zombies_right:
         zombie.move_left()
-        zombie.animate('zombie', 'male_walk_left')
+        zombie.animate('zombie', zombie.random_zombie_right)
         zombie.update_health_bar(screen)
 
     for zombie in game.all_zombies_left:
         zombie.move_right()
-        zombie.animate('zombie', 'male_walk_right')
-        # game.player.animate('ninja', 'throw_left')
+        zombie.animate('zombie', zombie.random_zombie_left)
         zombie.update_health_bar(screen)
 
     if game.key_pressed.get(pygame.K_LEFT) and game.player.rect.x >= 0:

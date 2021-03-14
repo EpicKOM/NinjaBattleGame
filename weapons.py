@@ -32,8 +32,7 @@ class Kunai(pygame.sprite.Sprite):
             zombie.damage(self.attack)
 
         # Vérifier si le Kunai est encore sur l'écran
-        if self.rect.x > 1080:
-            # Détruire le Kunai
+        if self.rect.x > 1080 :
             self.remove_right()
 
     def move_left(self):
@@ -49,7 +48,6 @@ class Kunai(pygame.sprite.Sprite):
 
         # Vérifier si le Kunai est encore sur l'écran
         if self.rect.x < 0:
-            # Détruire le Kunai
             self.remove_left()
 
 
