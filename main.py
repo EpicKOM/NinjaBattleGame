@@ -18,7 +18,9 @@ FPS = 100
 # Création et configuration de la fenêtre de jeu
 pygame.display.set_caption("Ninja Battle Game")
 screen = pygame.display.set_mode((1080, 720))
-background = pygame.image.load('assets/bg.jpg')
+background = pygame.image.load('assets/design/bg.jpg')
+magic_icon = pygame.image.load('assets/design/magic.png')
+magic_icon = pygame.transform.scale(magic_icon, (25, 40))
 
 game = Game()
 running = True
@@ -26,12 +28,14 @@ running = True
 # Boucle du jeu
 while running:
 
-    # Appliquer l'arrière plan du jeu
+    # Appliquer l'image de l'arrière plan du jeu
     screen.blit(background, (-1300, -200))
+    screen.blit(magic_icon, (20, 20))
 
     # Appliquer l'image du joueur
     screen.blit(game.player.image, game.player.rect)
     game.player.update_health_bar(screen)
+    game.player.update_magic_bar(screen, magic_icon.get_height())
 
     # Appliquer l'image des armes
     game.player.all_kunai_right.draw(screen)
@@ -49,12 +53,20 @@ while running:
 
     for zombie in game.all_zombies_right:
         zombie.move_left()
-        zombie.animate('zombie', zombie.random_zombie_right)
+        zombie.animate('zombie', f'{zombie.random_zombie}walk_left')
+        if zombie.zombie_attack and not zombie.attack_reverse:
+            zombie.animate('zombie', f'{zombie.random_zombie}attack_left')
+        elif zombie.zombie_attack and zombie.attack_reverse:
+            zombie.animate('zombie', f'{zombie.random_zombie}attack_right')
         zombie.update_health_bar(screen)
 
     for zombie in game.all_zombies_left:
         zombie.move_right()
-        zombie.animate('zombie', zombie.random_zombie_left)
+        zombie.animate('zombie', f'{zombie.random_zombie}walk_right')
+        if zombie.zombie_attack and not zombie.attack_reverse:
+            zombie.animate('zombie', f'{zombie.random_zombie}attack_right')
+        elif zombie.zombie_attack and zombie.attack_reverse:
+            zombie.animate('zombie', f'{zombie.random_zombie}attack_left')
         zombie.update_health_bar(screen)
 
     if game.key_pressed.get(pygame.K_LEFT) and game.player.rect.x >= 0:

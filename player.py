@@ -1,5 +1,5 @@
 import pygame
-from weapons import Kunai
+from weapons import Kunai, Fireball
 import animation
 
 
@@ -36,6 +36,10 @@ class Ninja(animation.AnimateSprite):
         self.image = pygame.image.load(self.image_name)
         self.image = pygame.transform.scale(self.image, (100, 120))
 
+    def update_magic_bar(self, surface, height):
+        pygame.draw.rect(surface, (46, 46, 46), [60, 20 + (height/2) - 6, 200, 12])
+        # pygame.draw.rect(surface, (), [60, 20 + (height/2) - 6, self.health, 12])
+
     def update_health_bar(self, surface):
         if self.health >= self.max_health*0.5:
             bar_color = (0, 183, 74)
@@ -56,6 +60,7 @@ class Ninja(animation.AnimateSprite):
         kunai_right.rect.x = self.rect.x + 55
         kunai_right.rect.y = self.rect.y + 60
         self.all_kunai_right.add(kunai_right)
+        self.animation_speed = 0.2
         self.start_animation()
 
     def launch_kunai_left(self):
@@ -66,6 +71,7 @@ class Ninja(animation.AnimateSprite):
         kunai_left.rect.x = self.rect.x - 45
         kunai_left.rect.y = self.rect.y + 60
         self.all_kunai_left.add(kunai_left)
+        self.animation_speed = 0.2
         self.start_animation()
 
     def run_right(self):
@@ -73,15 +79,18 @@ class Ninja(animation.AnimateSprite):
         self.health_bar_position = 13
         if not self.game.check_collision(self, self.game.all_zombies_right) and not self.game.check_collision(self, self.game.all_zombies_left):
             self.rect.x += self.velocity
+            self.animation_speed = 0.2
             self.start_animation()
         else:
             for zombie in self.game.check_collision(self, self.game.all_zombies_right):
                 if self.rect.x > zombie.x():
                     self.rect.x += self.velocity
+                    self.animation_speed = 0.2
                     self.start_animation()
             for zombie in self.game.check_collision(self, self.game.all_zombies_left):
                 if self.rect.x > zombie.x():
                     self.rect.x += self.velocity
+                    self.animation_speed = 0.2
                     self.start_animation()
 
     def run_left(self):
@@ -89,15 +98,18 @@ class Ninja(animation.AnimateSprite):
         self.health_bar_position = -20
         if not self.game.check_collision(self, self.game.all_zombies_right) and not self.game.check_collision(self, self.game.all_zombies_left):
             self.rect.x -= self.velocity
+            self.animation_speed = 0.2
             self.start_animation()
         else:
             for zombie in self.game.check_collision(self, self.game.all_zombies_right):
                 if self.rect.x < zombie.x():
                     self.rect.x -= self.velocity
+                    self.animation_speed = 0.2
                     self.start_animation()
             for zombie in self.game.check_collision(self, self.game.all_zombies_left):
                 if self.rect.x < zombie.x():
                     self.rect.x -= self.velocity
+                    self.animation_speed = 0.2
                     self.start_animation()
 
     def jump(self):
@@ -130,6 +142,7 @@ class Ninja(animation.AnimateSprite):
 
         if self.game.check_collision(self, self.game.all_zombies_right):
             for zombie in self.game.check_collision(self, self.game.all_zombies_right):
+                print(self.rect.y)
                 if self.rect.y == 476:
                     zombie.damage(self.attack)
                     self.isJump = True
@@ -138,7 +151,7 @@ class Ninja(animation.AnimateSprite):
 
         if self.game.check_collision(self, self.game.all_zombies_left):
             for zombie in self.game.check_collision(self, self.game.all_zombies_left):
-                if self.rect.y == 476:
+                if self.rect.y == 476 and self.jump_velocity <= 0:
                     zombie.damage(self.attack)
                     self.isJump = True
                     self.jump_velocity = 20

@@ -19,17 +19,11 @@ class Game(pygame.sprite.Sprite):
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)
-        zombie_right.random_zombie = random.choice(['zombie_male_right', 'zombie_female_right'])
-        zombie_right.image = pygame.image.load('assets/{}.png'.format(zombie_right.random_zombie))
-        zombie_right.image = pygame.transform.scale(zombie_right.image, (99, 120))
         zombie_right.rect.x = 1080 + random.randint(0, 300)
         self.all_zombies_right.add(zombie_right)
 
     def spawn_left_zombie(self):
         zombie_left = Zombie(self)
-        zombie_left.random_zombie = random.choice(['zombie_male_left', 'zombie_female_left'])
-        zombie_left.image = pygame.image.load('assets/{}.png'.format(zombie_left.random_zombie))
-        zombie_left.image = pygame.transform.scale(zombie_left.image, (99, 120))
         zombie_left.rect.x = 0 - zombie_left.image.get_width() - random.randint(0, 300)
         self.all_zombies_left.add(zombie_left)
 

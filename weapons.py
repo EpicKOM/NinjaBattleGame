@@ -51,3 +51,11 @@ class Kunai(pygame.sprite.Sprite):
             self.remove_left()
 
 
+class Fireball(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('assets/projectiles/fireball.png')
+        self.image = pygame.transform.scale(self.image, (50, 10))
+        self.velocity = 6
+
+
