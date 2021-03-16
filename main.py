@@ -5,7 +5,6 @@
 
 
 import pygame
-import random
 from game import Game
 
 # Initialisation du module
@@ -20,30 +19,45 @@ pygame.display.set_caption("Ninja Battle Game")
 screen = pygame.display.set_mode((1080, 720))
 background = pygame.image.load('assets/design/bg.jpg')
 magic_icon = pygame.image.load('assets/design/magic.png')
-magic_icon = pygame.transform.scale(magic_icon, (25, 40))
+magic_icon = pygame.transform.scale(magic_icon, (19, 30))
+point_icon = pygame.image.load('assets/design/coins.png')
+point_icon = pygame.transform.scale(point_icon, (30, 30))
+font_points = pygame.font.SysFont('verdana', 16, True)
 
 game = Game()
 running = True
-
 # Boucle du jeu
 while running:
 
     # Appliquer l'image de l'arrière plan du jeu
     screen.blit(background, (-1300, -200))
-    screen.blit(magic_icon, (20, 20))
+    if not game.game_finish:
+        screen.blit(magic_icon, (20, 20))
+        screen.blit(point_icon, (15, 80))
+        point_text = font_points.render(str(game.total_points), True, (255, 182, 40))
+        game.player.update_health_bar(screen)
+        game.player.update_magic_bar(screen, magic_icon.get_height())
+        screen.blit(point_text, (60, 85))
+
 
     # Appliquer l'image du joueur
     screen.blit(game.player.image, game.player.rect)
-    game.player.update_health_bar(screen)
-    game.player.update_magic_bar(screen, magic_icon.get_height())
 
     # Appliquer l'image des armes
     game.player.all_kunai_right.draw(screen)
     game.player.all_kunai_left.draw(screen)
+    game.player.all_fireball_right.draw(screen)
+    game.player.all_fireball_left.draw(screen)
 
     # Appliquer l'image des énemies
     game.all_zombies_right.draw(screen)
     game.all_zombies_left.draw(screen)
+
+    for fireball in game.player.all_fireball_right:
+        fireball.move_right()
+
+    for fireball in game.player.all_fireball_left:
+        fireball.move_left()
 
     for kunai in game.player.all_kunai_right:
         kunai.move_right()
@@ -83,6 +97,9 @@ while running:
         else:
             game.player.animate('ninja', 'throw_left')
 
+    if game.player.gover_animation:
+        game.player.animate('ninja', 'gover_right')
+
     if game.player.isJump:
         game.player.jump()
 
@@ -119,6 +136,13 @@ while running:
                     game.player.launch_kunai_right()
                 else:
                     game.player.launch_kunai_left()
+
+            elif event.key == pygame.K_z and not game.player.throw_animation and game.player.magic_power >= 80:
+                game.player.throw_animation = True
+                if 'right' in game.player.image_name or 'right' in game.player.image_name[0]:
+                    game.player.launch_fireball_right()
+                else:
+                    game.player.launch_fireball_left()
 
         elif event.type == pygame.KEYUP:
             game.key_pressed[event.key] = False

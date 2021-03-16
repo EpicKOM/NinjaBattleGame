@@ -10,6 +10,7 @@ class AnimateSprite(pygame.sprite.Sprite):
         self.images = ''
         self.animation = False
         self.throw_animation = False
+        self.gover_animation = False
         self.zombie_attack = False
         self.animation_speed = 0.2
         self.attack_reverse = False
@@ -32,6 +33,7 @@ class AnimateSprite(pygame.sprite.Sprite):
                 self.throw_animation = False
                 self.zombie_attack = False
                 self.attack_reverse = False
+                self.gover_animation = False
 
 
 # definir une fonction pour charger les images d'un sprite
@@ -53,6 +55,7 @@ animations = {'ninja_throw_right': load_animation_images('ninja', 'throw_right')
               'ninja_throw_left': load_animation_images('ninja', 'throw_left'),
               'ninja_run_right': load_animation_images('ninja', 'run_right'),
               'ninja_run_left': load_animation_images('ninja', 'run_left'),
+              'ninja_gover_right': load_animation_images('ninja', 'gover_right'),
               'zombie_male_walk_right': load_animation_images('zombie', 'male_walk_right'),
               'zombie_male_walk_left': load_animation_images('zombie', 'male_walk_left'),
               'zombie_female_walk_right': load_animation_images('zombie', 'female_walk_right'),

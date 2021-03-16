@@ -16,6 +16,12 @@ class Zombie(animation.AnimateSprite):
         self.health = 50
         self.angle = 0
         self.points = 10
+        self.magic = 20
+        self.attack = 0.1
+
+    def remove(self):
+        self.game.all_zombies_right.remove(self)
+        self.game.all_zombies_left.remove(self)
 
     def damage(self, amount):
         self.health -= amount
@@ -24,6 +30,7 @@ class Zombie(animation.AnimateSprite):
         if self.health <= 0:
             self.game.kill += 1
             self.game.total_points += self.points
+            self.game.player.magic_power += self.magic
             self.health = self.max_health
             if self in self.game.all_zombies_right:
                 self.random_zombie = random.choice(['male_', 'female_'])
@@ -63,11 +70,13 @@ class Zombie(animation.AnimateSprite):
             if self.rect.x <= self.game.player.rect.x:
                 self.start_animation()
                 self.zombie_attack = True
+                self.game.player.damage(self.attack)
                 self.animation_speed = 0.08
             else:
                 self.start_animation()
                 self.attack_reverse = True
                 self.zombie_attack = True
+                self.game.player.damage(self.attack)
                 self.animation_speed = 0.08
 
     def move_left(self):
@@ -86,11 +95,13 @@ class Zombie(animation.AnimateSprite):
             if self.rect.x >= self.game.player.rect.x:
                 self.start_animation()
                 self.zombie_attack = True
+                self.game.player.damage(self.attack)
                 self.animation_speed = 0.08
             else:
                 self.start_animation()
                 self.attack_reverse = True
                 self.zombie_attack = True
+                self.game.player.damage(self.attack)
                 self.animation_speed = 0.08
 
     def x(self):

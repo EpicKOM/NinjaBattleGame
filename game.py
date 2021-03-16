@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 from player import Ninja
 from enemies import Zombie
 
@@ -15,7 +16,14 @@ class Game(pygame.sprite.Sprite):
         self.kill = 0
         self.total_points = 0
         self.spawn_left_zombie()
-        # self.spawn_right_zombie()
+        self.spawn_right_zombie()
+        self.spawn_left_zombie()
+        self.spawn_right_zombie()
+        self.spawn_left_zombie()
+        self.spawn_right_zombie()
+        self.spawn_left_zombie()
+        self.spawn_right_zombie()
+        self.game_finish = False
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)
@@ -30,3 +38,13 @@ class Game(pygame.sprite.Sprite):
     def check_collision(self, sprite, group):
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
 
+    def game_over(self):
+        for zombie in self.all_zombies_right:
+            zombie.remove()
+
+        for zombie in self.all_zombies_left:
+            zombie.remove()
+        self.player.animation_speed = 0.1
+        self.player.start_animation()
+        self.player.gover_animation = True
+        self.game_finish = True

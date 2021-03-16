@@ -18,11 +18,20 @@ class Ninja(animation.AnimateSprite):
         self.jump_animation = False
         self.all_kunai_right = pygame.sprite.Group()
         self.all_kunai_left = pygame.sprite.Group()
+        self.all_fireball_right = pygame.sprite.Group()
+        self.all_fireball_left = pygame.sprite.Group()
         self.jump_stop = -20
         self.max_health = 100
         self.health = 100
         self.attack = 20
         self.health_bar_position = 10
+        self.magic_power = 0
+        self.max_magic_power = 200
+
+    def damage(self, amount):
+        self.health -= amount
+        if self.health <= 0:
+            self.game.game_over()
 
     def idle_right(self):
         self.health_bar_position = 10
@@ -37,8 +46,13 @@ class Ninja(animation.AnimateSprite):
         self.image = pygame.transform.scale(self.image, (100, 120))
 
     def update_magic_bar(self, surface, height):
-        pygame.draw.rect(surface, (46, 46, 46), [60, 20 + (height/2) - 6, 200, 12])
-        # pygame.draw.rect(surface, (), [60, 20 + (height/2) - 6, self.health, 12])
+        if self.magic_power >= self.max_magic_power:
+            self.magic_power = self.max_magic_power
+        elif self.max_magic_power <= 0:
+            self.magic_power = 0
+
+        pygame.draw.rect(surface, (46, 46, 46), [60, 20 + (height/2) - 6, 200, 10])
+        pygame.draw.rect(surface, (13, 71, 161), [60, 20 + (height/2) - 6, self.magic_power, 10])
 
     def update_health_bar(self, surface):
         if self.health >= self.max_health*0.5:
@@ -68,11 +82,27 @@ class Ninja(animation.AnimateSprite):
         kunai_left = Kunai(self)
         kunai_left.image = pygame.image.load('assets/projectiles/kunai_left.png')
         kunai_left.image = pygame.transform.scale(kunai_left.image, (50, 10))
-        kunai_left.rect.x = self.rect.x - 45
+        kunai_left.rect.x = self.rect.x - 3
         kunai_left.rect.y = self.rect.y + 60
         self.all_kunai_left.add(kunai_left)
         self.animation_speed = 0.2
         self.start_animation()
+
+    def launch_fireball_right(self):
+        self.health_bar_position = 10
+        fireball_right = Fireball(self)
+        self.all_fireball_right.add(fireball_right)
+        self.animation_speed = 0.2
+        self.start_animation()
+
+    def launch_fireball_left(self):
+        self.health_bar_position = -15
+        fireball_left = Fireball(self)
+        fireball_left.rect.x = self.rect.x - 3
+        self.all_fireball_left.add(fireball_left)
+        self.animation_speed = 0.2
+        self.start_animation()
+        self.magic_power -= fireball_left.magic
 
     def run_right(self):
         self.throw_animation = False
@@ -142,7 +172,6 @@ class Ninja(animation.AnimateSprite):
 
         if self.game.check_collision(self, self.game.all_zombies_right):
             for zombie in self.game.check_collision(self, self.game.all_zombies_right):
-                print(self.rect.y)
                 if self.rect.y == 476:
                     zombie.damage(self.attack)
                     self.isJump = True
