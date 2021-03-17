@@ -56,6 +56,7 @@ animations = {'ninja_throw_right': load_animation_images('ninja', 'throw_right')
               'ninja_run_right': load_animation_images('ninja', 'run_right'),
               'ninja_run_left': load_animation_images('ninja', 'run_left'),
               'ninja_gover_right': load_animation_images('ninja', 'gover_right'),
+              'ninja_gover_left': load_animation_images('ninja', 'gover_left'),
               'zombie_male_walk_right': load_animation_images('zombie', 'male_walk_right'),
               'zombie_male_walk_left': load_animation_images('zombie', 'male_walk_left'),
               'zombie_female_walk_right': load_animation_images('zombie', 'female_walk_right'),

@@ -1,8 +1,8 @@
 import pygame
 import random
-import time
 from player import Ninja
 from enemies import Zombie
+from sounds import SoundManager
 
 
 class Game(pygame.sprite.Sprite):
@@ -15,15 +15,10 @@ class Game(pygame.sprite.Sprite):
         self.all_zombies_left = pygame.sprite.Group()
         self.kill = 0
         self.total_points = 0
-        self.spawn_left_zombie()
-        self.spawn_right_zombie()
-        self.spawn_left_zombie()
-        self.spawn_right_zombie()
-        self.spawn_left_zombie()
-        self.spawn_right_zombie()
-        self.spawn_left_zombie()
-        self.spawn_right_zombie()
         self.game_finish = False
+        self.sound_manager = SoundManager()
+        self.spawn_left_zombie()
+        self.spawn_right_zombie()
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)
@@ -48,3 +43,4 @@ class Game(pygame.sprite.Sprite):
         self.player.start_animation()
         self.player.gover_animation = True
         self.game_finish = True
+        self.sound_manager.play('game_over', 0.03)

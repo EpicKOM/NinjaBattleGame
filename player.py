@@ -94,6 +94,7 @@ class Ninja(animation.AnimateSprite):
         self.all_fireball_right.add(fireball_right)
         self.animation_speed = 0.2
         self.start_animation()
+        self.magic_power -= fireball_right.magic
 
     def launch_fireball_left(self):
         self.health_bar_position = -15
