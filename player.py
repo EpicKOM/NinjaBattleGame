@@ -31,7 +31,7 @@ class Ninja(animation.AnimateSprite):
     def damage(self, amount):
         self.health -= amount
         if self.health <= 0:
-            self.game.game_over()
+            self.game.vanish_all_monsters()
 
     def idle_right(self):
         self.health_bar_position = 10
@@ -174,6 +174,7 @@ class Ninja(animation.AnimateSprite):
         if self.game.check_collision(self, self.game.all_zombies_right):
             for zombie in self.game.check_collision(self, self.game.all_zombies_right):
                 if self.rect.y == 476:
+                    self.game.sound_manager.play('punch', 0.08)
                     zombie.damage(self.attack)
                     self.isJump = True
                     self.jump_velocity = 20
@@ -182,6 +183,7 @@ class Ninja(animation.AnimateSprite):
         if self.game.check_collision(self, self.game.all_zombies_left):
             for zombie in self.game.check_collision(self, self.game.all_zombies_left):
                 if self.rect.y == 476 and self.jump_velocity <= 0:
+                    self.game.sound_manager.play('punch', 0.08)
                     zombie.damage(self.attack)
                     self.isJump = True
                     self.jump_velocity = 20

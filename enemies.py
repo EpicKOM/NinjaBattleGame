@@ -17,7 +17,7 @@ class Zombie(animation.AnimateSprite):
         self.angle = 0
         self.points = 10
         self.magic = 20
-        self.attack = 0.1
+        self.attack = 0.4
 
     def remove(self):
         self.game.all_zombies_right.remove(self)

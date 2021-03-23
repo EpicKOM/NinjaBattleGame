@@ -14,8 +14,10 @@ class Game(pygame.sprite.Sprite):
         self.all_zombies_right = pygame.sprite.Group()
         self.all_zombies_left = pygame.sprite.Group()
         self.kill = 0
+        self.dismiss_monsters = False
         self.total_points = 0
         self.game_finish = False
+        self.finish_scene = True
         self.sound_manager = SoundManager()
         self.spawn_left_zombie()
         self.spawn_right_zombie()
@@ -33,14 +35,25 @@ class Game(pygame.sprite.Sprite):
     def check_collision(self, sprite, group):
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
 
-    def game_over(self):
+    def vanish_all_monsters(self):
         for zombie in self.all_zombies_right:
-            zombie.remove()
-
+            zombie.current_image = 0
         for zombie in self.all_zombies_left:
-            zombie.remove()
-        self.player.animation_speed = 0.1
-        self.player.start_animation()
-        self.player.gover_animation = True
-        self.game_finish = True
-        self.sound_manager.play('game_over', 0.03)
+            zombie.current_image = 0
+        self.sound_manager.play('poof', 0.06)
+        self.dismiss_monsters = True
+
+    def game_over(self, surface):
+        GO_font = pygame.font.SysFont("arial", 95, True)
+        retry_font = pygame.font.SysFont("arial", 25, True)
+        kill_icon = pygame.image.load('assets/design/cross.png')
+        kill_icon = pygame.transform.scale(kill_icon, (32, 43))
+
+        GO_text = GO_font.render("Game Over", True, (255, 255, 255))
+        retry_text = retry_font.render("Appuyer sur espace pour recommencer une partie.", True, (255, 255, 255))
+        surface.blit(GO_text, ((surface.get_width() - GO_text.get_width()) / 2, 60))
+        surface.blit(kill_icon, (((surface.get_width() - GO_text.get_width())/2) + GO_text.get_width() / 2, 250))
+        surface.blit(retry_text, ((surface.get_width() - retry_text.get_width()) / 2, 680))
+
+
+

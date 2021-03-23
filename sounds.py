@@ -8,7 +8,9 @@ class SoundManager:
             'jump': pygame.mixer.Sound("assets/sounds/jump.mp3"),
             'kunai_throw': pygame.mixer.Sound("assets/sounds/kunai_throw.ogg"),
             'duck': pygame.mixer.Sound("assets/sounds/duck.ogg"),
-            'fireball': pygame.mixer.Sound("assets/sounds/fireball.mp3")
+            'fireball': pygame.mixer.Sound("assets/sounds/fireball.mp3"),
+            'poof': pygame.mixer.Sound("assets/sounds/poof.mp3"),
+            'punch': pygame.mixer.Sound("assets/sounds/punch.mp3"),
         }
 
     def play(self, name, volume):
