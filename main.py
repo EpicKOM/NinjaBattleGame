@@ -13,7 +13,7 @@ pygame.init()
 
 #Définir une clock et gestion des FPS
 clock = pygame.time.Clock()
-FPS = 80
+FPS = 100
 
 # Création et configuration de la fenêtre de jeu
 pygame.display.set_caption("Ninja Battle Game")
@@ -36,7 +36,6 @@ running = True
 
 # Boucle du jeu
 while running:
-
     # Appliquer l'image de l'arrière plan du jeu
     screen.blit(background, (-1300, -200))
     # Appliquer l'image du joueur
@@ -107,6 +106,7 @@ while running:
                     zombie.remove()
 
             if len(game.all_zombies_right) <= 0 and len(game.all_zombies_left) <= 0:
+                game.dismiss_monsters = False
                 game.game_finish = True
 
         else:
@@ -177,7 +177,7 @@ while running:
                 game.player.isJump = True
 
             elif event.key == pygame.K_SPACE and game.game_finish:
-                print('On rejoue !')
+                game.game_finish = False
 
             elif event.key == pygame.K_d and not game.player.throw_animation and not game.game_finish:
                 game.player.throw_animation = True

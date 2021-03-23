@@ -21,6 +21,12 @@ class Game(pygame.sprite.Sprite):
         self.sound_manager = SoundManager()
         self.spawn_left_zombie()
         self.spawn_right_zombie()
+        self.spawn_left_zombie()
+        self.spawn_right_zombie()
+        self.spawn_left_zombie()
+        self.spawn_right_zombie()
+        self.spawn_right_zombie()
+
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)

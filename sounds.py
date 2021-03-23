@@ -4,7 +4,7 @@ import pygame
 class SoundManager:
     def __init__(self):
         self.sounds = {
-            'game_over': pygame.mixer.Sound("assets/sounds/game_over.ogg"),
+            'game_over': pygame.mixer.Sound("assets/sounds/game_over.mp3"),
             'jump': pygame.mixer.Sound("assets/sounds/jump.mp3"),
             'kunai_throw': pygame.mixer.Sound("assets/sounds/kunai_throw.ogg"),
             'duck': pygame.mixer.Sound("assets/sounds/duck.ogg"),
