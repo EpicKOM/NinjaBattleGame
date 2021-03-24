@@ -19,14 +19,6 @@ class Game(pygame.sprite.Sprite):
         self.game_finish = False
         self.finish_scene = True
         self.sound_manager = SoundManager()
-        self.spawn_left_zombie()
-        self.spawn_right_zombie()
-        self.spawn_left_zombie()
-        self.spawn_right_zombie()
-        self.spawn_left_zombie()
-        self.spawn_right_zombie()
-        self.spawn_right_zombie()
-
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)
@@ -60,6 +52,4 @@ class Game(pygame.sprite.Sprite):
         surface.blit(GO_text, ((surface.get_width() - GO_text.get_width()) / 2, 60))
         surface.blit(kill_icon, (((surface.get_width() - GO_text.get_width())/2) + GO_text.get_width() / 2, 250))
         surface.blit(retry_text, ((surface.get_width() - retry_text.get_width()) / 2, 680))
-
-
 

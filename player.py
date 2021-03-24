@@ -1,5 +1,5 @@
 import pygame
-from weapons import Kunai, Fireball
+from weapons import Kunai, Fireball, Kamehameha
 import animation
 
 
@@ -20,6 +20,7 @@ class Ninja(animation.AnimateSprite):
         self.all_kunai_left = pygame.sprite.Group()
         self.all_fireball_right = pygame.sprite.Group()
         self.all_fireball_left = pygame.sprite.Group()
+        self.all_kamehameha_right = pygame.sprite.Group()
         self.jump_stop = -20
         self.max_health = 100
         self.health = 100
@@ -65,6 +66,13 @@ class Ninja(animation.AnimateSprite):
         # Dessiner la barre de vie
         pygame.draw.rect(surface, (46, 46, 46), [self.rect.x + self.health_bar_position, self.rect.y - 15, self.max_health, 7])
         pygame.draw.rect(surface, bar_color, [self.rect.x + self.health_bar_position, self.rect.y - 15, self.health, 7])
+
+    def launch_kamehameha_right(self):
+        kamehameha_right = Kamehameha(self)
+        kamehameha_right.throw_kamehameha = True
+        self.all_kamehameha_right.add(kamehameha_right)
+        self.animation_speed = 0.2
+        self.start_animation()
 
     def launch_kunai_right(self):
         self.health_bar_position = 10

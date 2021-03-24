@@ -10,6 +10,7 @@ class AnimateSprite(pygame.sprite.Sprite):
         self.images = ''
         self.animation = False
         self.throw_animation = False
+        self.throw_kamehameha = False
         self.gover_animation = False
         self.zombie_attack = False
         self.animation_speed = 0.2
@@ -35,6 +36,7 @@ class AnimateSprite(pygame.sprite.Sprite):
                 self.throw_animation = False
                 self.zombie_attack = False
                 self.attack_reverse = False
+                self.throw_kamehameha = False
                 self.end_animation = True
 
 
@@ -49,6 +51,20 @@ def load_animation_images(sprite_name, action):
         path_name.append(image_path)
         image = pygame.image.load(image_path)
         images.append(pygame.transform.scale(image, (100, 120)))
+    total = [images, path_name]
+    return total
+
+
+def load_kame_images(action):
+    images = []
+    path_name = []
+
+    path = f"assets/kamehameha/{action}"
+    for num in range(0, 34):
+        image_path = f'{path}/{action}{num}.png'
+        path_name.append(image_path)
+        image = pygame.image.load(image_path)
+        images.append(image)
     total = [images, path_name]
     return total
 
@@ -68,5 +84,5 @@ animations = {'ninja_throw_right': load_animation_images('ninja', 'throw_right')
               'zombie_male_attack_left': load_animation_images('zombie', 'male_attack_left'),
               'zombie_female_attack_left': load_animation_images('zombie', 'female_attack_left'),
               'zombie_disappear': load_animation_images('zombie', 'disappear'),
-              'projectiles_kame_right': load_animation_images('projectiles', 'kame_right'),
+              'kamehameha_kame_right': load_kame_images('kame_right'),
               }

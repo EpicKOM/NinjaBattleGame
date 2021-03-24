@@ -13,7 +13,7 @@ pygame.init()
 
 #Définir une clock et gestion des FPS
 clock = pygame.time.Clock()
-FPS = 100
+FPS = 80
 
 # Création et configuration de la fenêtre de jeu
 pygame.display.set_caption("Ninja Battle Game")
@@ -75,6 +75,7 @@ while running:
         game.player.all_kunai_left.draw(screen)
         game.player.all_fireball_right.draw(screen)
         game.player.all_fireball_left.draw(screen)
+        game.player.all_kamehameha_right.draw(screen)
 
         # Appliquer l'image des énemies
         game.all_zombies_right.draw(screen)
@@ -145,8 +146,15 @@ while running:
         if game.player.isJump:
             game.player.jump()
 
+        for kamehameha in game.player.all_kamehameha_right:
+            if kamehameha.throw_kamehameha:
+                kamehameha.animation_speed = 0.2
+                kamehameha.start_animation()
+                kamehameha.animate('kamehameha', 'kame_right')
+            if kamehameha.end_animation:
+                kamehameha.remove_right()
+
     # Mise à jour de l'écran
-    pygame.time.delay(10)
     pygame.display.flip()
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -197,6 +205,10 @@ while running:
                         game.player.launch_fireball_left()
                 else:
                     game.sound_manager.play('duck', 0.06)
+
+            elif event.key == pygame.K_q and not game.game_finish and len(game.player.all_kamehameha_right)<1:
+                game.player.throw_kamehameha = True
+                game.player.launch_kamehameha_right()
 
         elif event.type == pygame.KEYUP:
             game.key_pressed[event.key] = False

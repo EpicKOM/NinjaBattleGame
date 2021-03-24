@@ -1,4 +1,5 @@
 import pygame
+import animation
 
 
 class Kunai(pygame.sprite.Sprite):
@@ -113,3 +114,15 @@ class Fireball(pygame.sprite.Sprite):
         # Vérifier si la Fireball est encore sur l'écran
         if self.rect.x < 0:
             self.remove_left()
+
+
+class Kamehameha(animation.AnimateSprite):
+    def __init__(self, player):
+        super().__init__('kamehameha', 'idle_right')
+        self.player = player
+        self.rect = self.image.get_rect()
+        self.rect.x = self.player.rect.x + 55
+        self.rect.y = self.player.rect.y + 45
+
+    def remove_right(self):
+        self.player.all_kamehameha_right.remove(self)
