@@ -13,7 +13,7 @@ pygame.init()
 
 #Définir une clock et gestion des FPS
 clock = pygame.time.Clock()
-FPS = 80
+FPS = 70
 
 # Création et configuration de la fenêtre de jeu
 pygame.display.set_caption("Ninja Battle Game")
@@ -24,6 +24,7 @@ pygame.display.set_icon(gameIcon)
 
 
 background = pygame.image.load('assets/design/bg.jpg')
+background_bw = pygame.image.load('assets/design/bg_bw.jpg')
 magic_icon = pygame.image.load('assets/design/magic.png')
 magic_icon = pygame.transform.scale(magic_icon, (19, 30))
 point_icon = pygame.image.load('assets/design/coins.png')
@@ -36,8 +37,11 @@ running = True
 
 # Boucle du jeu
 while running:
-    # Appliquer l'image de l'arrière plan du jeu
-    screen.blit(background, (-1300, -200))
+    if game.kamehameha_mode:
+        # Appliquer l'image de l'arrière plan du jeu
+        screen.blit(background_bw, (-1300, -200))
+    else:
+        screen.blit(background, (-1300, -200))
     # Appliquer l'image du joueur
     screen.blit(game.player.image, game.player.rect)
     # Appliquer le nombre de FPS
@@ -50,7 +54,7 @@ while running:
         game.player.animation_speed = 0.1
         if game.finish_scene:
             game.player.animation = True
-            game.sound_manager.play('game_over', 0.06)
+            game.sound_manager.play('game_over', 0.06, 0)
             game.finish_scene = False
 
         if 'right' in game.player.image_name or 'right' in game.player.image_name[0]:
@@ -153,6 +157,7 @@ while running:
                 kamehameha.animate('kamehameha', 'kame_right')
             if kamehameha.end_animation:
                 kamehameha.remove_right()
+                game.kamehameha_mode = False
 
     # Mise à jour de l'écran
     pygame.display.flip()
@@ -178,9 +183,15 @@ while running:
                 pygame.quit()
                 sys.exit()
 
+            elif event.key == pygame.K_LEFT and not game.game_finish:
+                game.sound_manager.play('running_left', 0.04, -1)
+
+            elif event.key == pygame.K_RIGHT and not game.game_finish:
+                game.sound_manager.play('running_right', 0.04, -1)
+
             elif event.key == pygame.K_SPACE and not game.game_finish:
                 if game.player.rect.y == 550:
-                    game.sound_manager.play('jump', 0.02)
+                    game.sound_manager.play('jump', 0.02, 0)
                 game.player.jump_animation = True
                 game.player.isJump = True
 
@@ -189,7 +200,7 @@ while running:
 
             elif event.key == pygame.K_d and not game.player.throw_animation and not game.game_finish:
                 game.player.throw_animation = True
-                game.sound_manager.play('kunai_throw', 0.3)
+                game.sound_manager.play('kunai_throw', 0.3, 0)
                 if 'right' in game.player.image_name or 'right' in game.player.image_name[0]:
                     game.player.launch_kunai_right()
                 else:
@@ -197,16 +208,17 @@ while running:
 
             elif event.key == pygame.K_z and not game.player.throw_animation and not game.game_finish:
                 if game.player.magic_power >= 80:
-                    game.sound_manager.play('fireball', 0.08)
+                    game.sound_manager.play('fireball', 0.08, 0)
                     game.player.throw_animation = True
                     if 'right' in game.player.image_name or 'right' in game.player.image_name[0]:
                         game.player.launch_fireball_right()
                     else:
                         game.player.launch_fireball_left()
                 else:
-                    game.sound_manager.play('duck', 0.06)
+                    game.sound_manager.play('duck', 0.06, 0)
 
-            elif event.key == pygame.K_q and not game.game_finish and len(game.player.all_kamehameha_right)<1:
+            elif event.key == pygame.K_q and not game.game_finish and len(game.player.all_kamehameha_right) < 1:
+                game.kamehameha_mode = True
                 game.player.throw_kamehameha = True
                 game.player.launch_kamehameha_right()
 
@@ -214,10 +226,12 @@ while running:
             game.key_pressed[event.key] = False
 
             if event.key == pygame.K_RIGHT and not game.game_finish:
+                game.sound_manager.stop('running_right')
                 game.player.idle_right()
                 game.player.stop_animation()
 
             elif event.key == pygame.K_LEFT and not game.game_finish:
+                game.sound_manager.stop('running_left')
                 game.player.idle_left()
                 game.player.stop_animation()
 

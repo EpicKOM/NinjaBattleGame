@@ -18,6 +18,7 @@ class Game(pygame.sprite.Sprite):
         self.total_points = 0
         self.game_finish = False
         self.finish_scene = True
+        self.kamehameha_mode = False
         self.sound_manager = SoundManager()
 
     def spawn_right_zombie(self):
@@ -38,7 +39,7 @@ class Game(pygame.sprite.Sprite):
             zombie.current_image = 0
         for zombie in self.all_zombies_left:
             zombie.current_image = 0
-        self.sound_manager.play('poof', 0.06)
+        self.sound_manager.play('poof', 0.06, 0)
         self.dismiss_monsters = True
 
     def game_over(self, surface):

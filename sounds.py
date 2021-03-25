@@ -11,8 +11,13 @@ class SoundManager:
             'fireball': pygame.mixer.Sound("assets/sounds/fireball.mp3"),
             'poof': pygame.mixer.Sound("assets/sounds/poof.mp3"),
             'punch': pygame.mixer.Sound("assets/sounds/punch.mp3"),
+            'running_left': pygame.mixer.Sound("assets/sounds/running.mp3"),
+            'running_right': pygame.mixer.Sound("assets/sounds/running.mp3")
         }
 
-    def play(self, name, volume):
+    def play(self, name, volume, loop):
         self.sounds[name].set_volume(volume)
-        self.sounds[name].play()
+        self.sounds[name].play(loops=loop)
+
+    def stop(self, name):
+        self.sounds[name].stop()
