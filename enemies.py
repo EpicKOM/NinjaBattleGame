@@ -35,7 +35,7 @@ class Zombie(animation.AnimateSprite):
             if self in self.game.all_zombies_right:
                 self.random_zombie = random.choice(['male_', 'female_'])
                 self.velocity = random.randint(1, 3)
-                self.rect.x = 1080 + random.randint(0, 300)
+                # self.rect.x = 1080 + random.randint(0, 3000)
 
             elif self in self.game.all_zombies_left:
                 self.random_zombie = random.choice(['male_', 'female_'])
@@ -103,6 +103,9 @@ class Zombie(animation.AnimateSprite):
                 self.zombie_attack = True
                 self.game.player.damage(self.attack)
                 self.animation_speed = 0.08
+
+    def stop_move(self):
+        self.velocity = 0
 
     def x(self):
         return self.rect.x

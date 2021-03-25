@@ -20,6 +20,11 @@ class Game(pygame.sprite.Sprite):
         self.finish_scene = True
         self.kamehameha_mode = False
         self.sound_manager = SoundManager()
+        self.spawn_right_zombie()
+        self.spawn_right_zombie()
+        self.spawn_right_zombie()
+        self.spawn_right_zombie()
+        self.spawn_right_zombie()
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)
@@ -41,6 +46,15 @@ class Game(pygame.sprite.Sprite):
             zombie.current_image = 0
         self.sound_manager.play('poof', 0.06, 0)
         self.dismiss_monsters = True
+
+    def test(self):
+        for zombie in self.all_zombies_right:
+
+            zombie.current_image = 0
+            zombie.badidi = 0
+            zombie.start_animation()
+        for zombie in self.all_zombies_left:
+            zombie.current_image = 0
 
     def game_over(self, surface):
         GO_font = pygame.font.SysFont("arial", 95, True)

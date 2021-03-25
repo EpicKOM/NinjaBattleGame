@@ -152,6 +152,8 @@ class Ninja(animation.AnimateSprite):
                     self.start_animation()
 
     def jump(self):
+        self.game.sound_manager.stop('running_left')
+        self.game.sound_manager.stop('running_right')
         self.health_bar_position = 0
         self.throw_animation = False
         if 'right' in self.image_name or 'right' in self.image_name[0]:
@@ -170,6 +172,10 @@ class Ninja(animation.AnimateSprite):
             self.jump_animation = False
         if self.jump_velocity < self.jump_stop:
             self.isJump = False
+            if self.game.key_pressed.get(pygame.K_LEFT):
+                self.game.sound_manager.play('running_left', 0.04, -1)
+            elif self.game.key_pressed.get(pygame.K_RIGHT):
+                self.game.sound_manager.play('running_right', 0.04, -1)
             self.jump_velocity = 20
             self.jump_stop = -20
             self.rect.y = 550

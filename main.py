@@ -11,7 +11,7 @@ from game import Game
 # Initialisation du module
 pygame.init()
 
-#Définir une clock et gestion des FPS
+#Définir une clock et le nombre de FPS
 clock = pygame.time.Clock()
 FPS = 70
 
@@ -22,14 +22,13 @@ gameIcon = pygame.image.load('assets/design/icon.png')
 gameIcon = pygame.transform.scale(gameIcon, (30, 30))
 pygame.display.set_icon(gameIcon)
 
-
+# Chargement des images statiques
 background = pygame.image.load('assets/design/bg.jpg')
 background_bw = pygame.image.load('assets/design/bg_bw.jpg')
 magic_icon = pygame.image.load('assets/design/magic.png')
 magic_icon = pygame.transform.scale(magic_icon, (19, 30))
-point_icon = pygame.image.load('assets/design/coins.png')
-point_icon = pygame.transform.scale(point_icon, (30, 30))
 
+# Chargement de la police d'écriture
 font_game = pygame.font.SysFont('arial', 20, True)
 
 game = Game()
@@ -37,20 +36,24 @@ running = True
 
 # Boucle du jeu
 while running:
+
+    # Appliquer l'image du fond en mode Kamehameha
     if game.kamehameha_mode:
-        # Appliquer l'image de l'arrière plan du jeu
         screen.blit(background_bw, (-1300, -200))
+
+    # Appliquer l'image du fond
     else:
         screen.blit(background, (-1300, -200))
+
     # Appliquer l'image du joueur
     screen.blit(game.player.image, game.player.rect)
+
     # Appliquer le nombre de FPS
     fps_text = font_game.render(f"FPS: {clock.get_fps():.0f}", True, (255, 255, 255))
     screen.blit(fps_text, (screen.get_width() - fps_text.get_width() - 20, 20))
 
+    # Partie terminée, GAME OVER
     if game.game_finish:
-        # Partie terminée, GAME OVER
-
         game.player.animation_speed = 0.1
         if game.finish_scene:
             game.player.animation = True
@@ -62,15 +65,15 @@ while running:
         else:
             game.player.animate('ninja', 'gover_left')
 
+        # Affichage des résultats de la partie
         game.game_over(screen)
 
+    # Partie en cours
     else:
-        point_text = font_game.render(str(game.total_points), True, (255, 182, 40))
-
+        # Affichage de l'icone magie
         screen.blit(magic_icon, (20, 20))
-        # screen.blit(point_icon, (15, 80))
-        # screen.blit(point_text, (60, 85))
 
+        # Affichage des jauges de vie et de magie du joueur
         game.player.update_health_bar(screen)
         game.player.update_magic_bar(screen, magic_icon.get_height())
 
@@ -152,13 +155,26 @@ while running:
 
         for kamehameha in game.player.all_kamehameha_right:
             if kamehameha.throw_kamehameha:
+                # kamehameha.move_right()
                 kamehameha.animation_speed = 0.2
                 kamehameha.start_animation()
                 kamehameha.animate('kamehameha', 'kame_right')
+                for zombie in game.all_zombies_right:
+                    zombie.stop_move()
+                    if zombie.rect.x <= kamehameha.rect.x + kamehameha.image.get_width():
+                        zombie.animation_speed = 0.2
+                        zombie.animate('zombie', 'disappear')
+                        if zombie.end_animation:
+                            game.sound_manager.play('poof', 0.06, 0)
+                            zombie.remove()
+                            game.kill += 1
+                    else:
+                        zombie.current_image = 0
             if kamehameha.end_animation:
+                game.sound_manager.play('fatality', 0.06, 0)
                 kamehameha.remove_right()
                 game.kamehameha_mode = False
-
+    print(game.kill)
     # Mise à jour de l'écran
     pygame.display.flip()
 
@@ -221,6 +237,7 @@ while running:
                 game.kamehameha_mode = True
                 game.player.throw_kamehameha = True
                 game.player.launch_kamehameha_right()
+                game.test()
 
         elif event.type == pygame.KEYUP:
             game.key_pressed[event.key] = False

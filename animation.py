@@ -16,6 +16,7 @@ class AnimateSprite(pygame.sprite.Sprite):
         self.animation_speed = 0.2
         self.attack_reverse = False
         self.end_animation = False
+        self.badidi = False
 
     def stop_animation(self):
         self.current_image = 0
@@ -38,6 +39,7 @@ class AnimateSprite(pygame.sprite.Sprite):
                 self.attack_reverse = False
                 self.throw_kamehameha = False
                 self.end_animation = True
+                self.badidi = False
 
 
 # definir une fonction pour charger les images d'un sprite
@@ -60,7 +62,7 @@ def load_kame_images(action):
     path_name = []
 
     path = f"assets/kamehameha/{action}"
-    for num in range(0, 34):
+    for num in range(0, 32):
         image_path = f'{path}/{action}{num}.png'
         path_name.append(image_path)
         image = pygame.image.load(image_path)
