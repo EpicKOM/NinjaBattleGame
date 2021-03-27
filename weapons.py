@@ -120,14 +120,10 @@ class Kamehameha(animation.AnimateSprite):
     def __init__(self, player):
         super().__init__('kamehameha', 'idle_right')
         self.player = player
-        self.attack = 1000
         self.rect = self.image.get_rect()
-        self.rect.x = self.player.rect.x + 55
-        self.rect.y = self.player.rect.y + 45
+        self.rect.x = self.player.rect.x + 40
+        self.rect.y = self.player.rect.y + 58
 
     def remove_right(self):
         self.player.all_kamehameha_right.remove(self)
 
-    # def move_right(self):
-    #     for zombie in self.player.game.check_collision(self, self.player.game.all_zombies_right):
-    #         self.player.game.kill +=1

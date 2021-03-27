@@ -14,6 +14,9 @@ class SoundManager:
             'running_left': pygame.mixer.Sound("assets/sounds/running.mp3"),
             'running_right': pygame.mixer.Sound("assets/sounds/running.mp3"),
             'fatality': pygame.mixer.Sound("assets/sounds/fatality.mp3"),
+            'test1': pygame.mixer.Sound("assets/sounds/test1.mp3"),
+            'ko': pygame.mixer.Sound("assets/sounds/ko.mp3"),
+            'bazooka': pygame.mixer.Sound("assets/sounds/bazooka.mp3"),
         }
 
     def play(self, name, volume, loop):

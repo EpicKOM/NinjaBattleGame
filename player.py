@@ -14,6 +14,7 @@ class Ninja(animation.AnimateSprite):
         self.velocity = 5
         self.jump_velocity = 20
         self.jump_deceleration = 1
+        self.jump_parameters = []
         self.isJump = False
         self.jump_animation = False
         self.all_kunai_right = pygame.sprite.Group()
@@ -23,6 +24,7 @@ class Ninja(animation.AnimateSprite):
         self.all_kamehameha_right = pygame.sprite.Group()
         self.jump_stop = -20
         self.max_health = 100
+        self.ko_alert = False
         self.health = 100
         self.attack = 20
         self.health_bar_position = 10
@@ -49,6 +51,18 @@ class Ninja(animation.AnimateSprite):
     def update_magic_bar(self, surface, height):
         if self.magic_power >= self.max_magic_power:
             self.magic_power = self.max_magic_power
+            pygame.draw.rect(surface, (213, 49, 84), [270, 20 + (height / 2) - 14, 40, 28], 3, 3, 3, 3)
+            font_ko = pygame.font.SysFont('arial', 16, True)
+            ko_text = font_ko.render("KO", True, (255, 255, 255))
+            surface.blit(ko_text, (270 + (40 - ko_text.get_width()) / 2, 20 + (height / 2) - (14 - (28 - ko_text.get_height()) / 2)))
+
+            if self.ko_alert:
+                self.game.sound_manager.play('ko', 0.4, 0)
+                self.ko_alert = False
+
+        elif self.magic_power < self.max_magic_power:
+            self.ko_alert = True
+
         elif self.max_magic_power <= 0:
             self.magic_power = 0
 
@@ -151,6 +165,24 @@ class Ninja(animation.AnimateSprite):
                     self.animation_speed = 0.3
                     self.start_animation()
 
+    def start_move(self):
+        self.velocity = 5
+        self.jump_velocity = 20
+        self.jump_deceleration = 1
+        if self.isJump:
+            self.jump_velocity = self.jump_parameters[0]
+            self.jump_deceleration = 1
+        if self.game.key_pressed.get(pygame.K_LEFT):
+            self.game.sound_manager.play('running_left', 0.04, -1)
+        elif self.game.key_pressed.get(pygame.K_RIGHT):
+            self.game.sound_manager.play('running_right', 0.04, -1)
+
+    def kamehameha_enabled(self):
+        self.velocity = 0
+        self.jump_velocity = 0
+        self.image = pygame.image.load('assets/ninja/throw_right/throw_right0.png')
+        self.image = pygame.transform.scale(self.image, (100, 120))
+
     def jump(self):
         self.game.sound_manager.stop('running_left')
         self.game.sound_manager.stop('running_right')
@@ -167,6 +199,8 @@ class Ninja(animation.AnimateSprite):
 
         self.rect.y -= self.jump_velocity
         self.jump_velocity -= self.jump_deceleration
+        if self.throw_kamehameha:
+            self.jump_parameters.append(self.jump_velocity)
         if self.jump_animation:
             self.start_animation()
             self.jump_animation = False
@@ -179,6 +213,7 @@ class Ninja(animation.AnimateSprite):
             self.jump_velocity = 20
             self.jump_stop = -20
             self.rect.y = 550
+            self.jump_parameters = []
             self.stop_animation()
             if 'right' in self.image_name:
                 self.idle_right()

@@ -23,6 +23,20 @@ class Zombie(animation.AnimateSprite):
         self.game.all_zombies_right.remove(self)
         self.game.all_zombies_left.remove(self)
 
+    def kamehameha_damage(self, amount=1000):
+        self.health -= amount
+
+        # Si le zombie est K.O
+        if self.health <= 0:
+            self.game.kill += 1
+            self.game.total_points += self.points
+            self.game.player.magic_power += self.magic
+            self.health = self.max_health
+            if self in self.game.all_zombies_right:
+                self.random_zombie = random.choice(['male_', 'female_'])
+                self.velocity = random.randint(1, 3)
+                self.rect.x = 2450
+
     def damage(self, amount):
         self.health -= amount
 
@@ -35,7 +49,7 @@ class Zombie(animation.AnimateSprite):
             if self in self.game.all_zombies_right:
                 self.random_zombie = random.choice(['male_', 'female_'])
                 self.velocity = random.randint(1, 3)
-                # self.rect.x = 1080 + random.randint(0, 3000)
+                self.rect.x = 1080 + random.randint(0, 300)
 
             elif self in self.game.all_zombies_left:
                 self.random_zombie = random.choice(['male_', 'female_'])
@@ -80,7 +94,7 @@ class Zombie(animation.AnimateSprite):
                 self.animation_speed = 0.08
 
     def move_left(self):
-        if not self.game.check_collision(self, self.game.player_group):
+        if not self.game.check_collision(self, self.game.player_group) or self.game.kamehameha_mode:
             self.rect.x -= self.velocity
             self.animation_speed = 0.2
             self.start_animation()
@@ -106,6 +120,9 @@ class Zombie(animation.AnimateSprite):
 
     def stop_move(self):
         self.velocity = 0
+
+    def start_move(self):
+        self.velocity = random.randint(1, 3)
 
     def x(self):
         return self.rect.x
