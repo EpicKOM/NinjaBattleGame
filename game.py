@@ -21,15 +21,10 @@ class Game(pygame.sprite.Sprite):
         self.kamehameha_mode = False
         self.game_results = False
         self.game_replay = False
+        self.game_time = 0
         self.sound_manager = SoundManager()
-        self.spawn_right_zombie()
-        self.spawn_right_zombie()
-        self.spawn_right_zombie()
-        self.spawn_right_zombie()
-        self.spawn_right_zombie()
-        self.spawn_right_zombie()
-
-
+        # self.spawn_right_zombie()
+        # self.spawn_left_zombie()
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)
@@ -57,22 +52,32 @@ class Game(pygame.sprite.Sprite):
         rounds_font = pygame.font.SysFont("arial", 25, True)
         results_font = pygame.font.SysFont("arial", 30, True)
 
+        self.game_time = int(self.game_time)
+        seconds = (self.game_time / 1000) % 60
+        seconds = int(seconds)
+        minutes = (self.game_time / (1000 * 60)) % 60
+        minutes = int(minutes)
+        hours = (self.game_time / (1000 * 60 * 60)) % 24
+        hours = int(hours)
+
         go_text = go_font.render("Game Over", True, (255, 255, 255))
         round_text = rounds_font.render("You Survived X Rounds", True, (255, 255, 255))
         points_text = results_font.render("Points", True, (255, 234, 0))
+        points_nb = results_font.render(f"{self.total_points}", True, (255, 234, 0))
         kills_text = results_font.render("Kills", True, (57, 192, 237))
+        kills_nb = results_font.render(f"{self.kill}", True, (57, 192, 237))
         game_time_text = results_font.render("Game Time", True, (0, 230, 118))
+        game_time_nb = results_font.render(f"{hours}:{minutes}:{seconds}", True, (0, 230, 118))
         retry_text = results_font.render("Press space to restart a game.", True, (255, 255, 255))
 
         surface.blit(go_text, ((surface.get_width() - go_text.get_width()) / 2, 60))
         surface.blit(round_text, ((surface.get_width() - round_text.get_width()) / 2, 180))
-        surface.blit(points_text, (150, 300))
-        surface.blit(kills_text, (((769 - (150 + points_text.get_width()))-kills_text.get_width())/2 + 150 + points_text.get_width(), 300))
-        surface.blit(game_time_text, (surface.get_width() - 150 - game_time_text.get_width(), 300))
-
-
-
-
+        surface.blit(points_text, ((508.5-points_text.get_width())/2, 300))
+        surface.blit(points_nb, (((508.5 - points_text.get_width()) / 2) + (points_text.get_width() - points_nb.get_width())/2, 350))
+        surface.blit(kills_text, ((surface.get_width() - kills_text.get_width()) / 2, 300))
+        surface.blit(kills_nb, (((surface.get_width() - kills_text.get_width()) / 2) + (kills_text.get_width() - kills_nb.get_width())/2, 350))
+        surface.blit(game_time_text, (((508.5-points_text.get_width())/2) + 508.5 + kills_text.get_width(), 300))
+        surface.blit(game_time_nb, ((((508.5-points_text.get_width())/2) + 508.5 + kills_text.get_width()) + (game_time_text.get_width() - game_time_nb.get_width()) / 2, 350))
         surface.blit(retry_text, ((surface.get_width() - retry_text.get_width()) / 2, 680))
 
         self.game_replay = True

@@ -127,3 +127,6 @@ class Kamehameha(animation.AnimateSprite):
     def remove_right(self):
         self.player.all_kamehameha_right.remove(self)
 
+    def remove_left(self):
+        self.player.all_kamehameha_left.remove(self)
+

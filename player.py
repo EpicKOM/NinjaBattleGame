@@ -22,6 +22,7 @@ class Ninja(animation.AnimateSprite):
         self.all_fireball_right = pygame.sprite.Group()
         self.all_fireball_left = pygame.sprite.Group()
         self.all_kamehameha_right = pygame.sprite.Group()
+        self.all_kamehameha_left = pygame.sprite.Group()
         self.jump_stop = -20
         self.max_health = 100
         self.ko_alert = False
@@ -35,6 +36,7 @@ class Ninja(animation.AnimateSprite):
         self.health -= amount
         if self.health <= 0:
             self.game.vanish_all_monsters()
+            self.game.game_time = pygame.time.get_ticks()
 
     def idle_right(self):
         self.health_bar_position = 10
@@ -85,6 +87,15 @@ class Ninja(animation.AnimateSprite):
         kamehameha_right = Kamehameha(self)
         kamehameha_right.throw_kamehameha = True
         self.all_kamehameha_right.add(kamehameha_right)
+        self.animation_speed = 0.2
+        self.start_animation()
+
+    def launch_kamehameha_left(self):
+        kamehameha_left = Kamehameha(self)
+        kamehameha_left.throw_kamehameha = True
+        kamehameha_left.image = pygame.image.load('assets/kamehameha/idle/idle_left.png')
+        kamehameha_left.rect.y = self.rect.y + 58
+        self.all_kamehameha_left.add(kamehameha_left)
         self.animation_speed = 0.2
         self.start_animation()
 
@@ -178,10 +189,16 @@ class Ninja(animation.AnimateSprite):
         elif self.game.key_pressed.get(pygame.K_RIGHT):
             self.game.sound_manager.play('running_right', 0.04, -1)
 
-    def kamehameha_enabled(self):
+    def kamehameha_enabled_right(self):
         self.velocity = 0
         self.jump_velocity = 0
         self.image = pygame.image.load('assets/ninja/throw_right/throw_right0.png')
+        self.image = pygame.transform.scale(self.image, (100, 120))
+
+    def kamehameha_enabled_left(self):
+        self.velocity = 0
+        self.jump_velocity = 0
+        self.image = pygame.image.load('assets/ninja/throw_left/throw_left0.png')
         self.image = pygame.transform.scale(self.image, (100, 120))
 
     def jump(self):

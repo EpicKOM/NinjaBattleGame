@@ -12,6 +12,7 @@ class Zombie(animation.AnimateSprite):
         self.rect = self.image.get_rect()
         self.rect.y = 552
         self.velocity = random.randint(1, 3)
+        self.velocity_memory = []
         self.max_health = 50
         self.health = 50
         self.angle = 0
@@ -36,6 +37,11 @@ class Zombie(animation.AnimateSprite):
                 self.velocity = random.randint(1, 3)
                 self.rect.x = 2450
 
+            elif self in self.game.all_zombies_left:
+                self.random_zombie = random.choice(['male_', 'female_'])
+                self.velocity = random.randint(1, 3)
+                self.rect.x = -1370
+
     def damage(self, amount):
         self.health -= amount
 
@@ -49,11 +55,13 @@ class Zombie(animation.AnimateSprite):
                 self.random_zombie = random.choice(['male_', 'female_'])
                 self.velocity = random.randint(1, 3)
                 self.rect.x = 1080 + random.randint(0, 300)
+                self.velocity_memory = []
 
             elif self in self.game.all_zombies_left:
                 self.random_zombie = random.choice(['male_', 'female_'])
                 self.velocity = random.randint(1, 3)
                 self.rect.x = 0 - self.image.get_width() - random.randint(0, 300)
+                self.velocity_memory = []
 
     def update_health_bar(self, surface):
         if self.health >= self.max_health * 0.5:
@@ -78,6 +86,7 @@ class Zombie(animation.AnimateSprite):
                 self.velocity = random.randint(1, 3)
                 self.random_zombie = random.choice(['male_', 'female_'])
                 self.rect.x = 0 - self.image.get_width() - random.randint(0, 300)
+                self.velocity_memory = []
 
         else:
             if self.rect.x <= self.game.player.rect.x:
@@ -103,6 +112,7 @@ class Zombie(animation.AnimateSprite):
                 self.health = self.max_health
                 self.random_zombie = random.choice(['male_', 'female_'])
                 self.rect.x = 1080 + random.randint(0, 300)
+                self.velocity_memory = []
 
         else:
             if self.rect.x >= self.game.player.rect.x:
@@ -125,10 +135,11 @@ class Zombie(animation.AnimateSprite):
                     self.game.player.damage(0)
 
     def stop_move(self):
+        self.velocity_memory.append(self.velocity)
         self.velocity = 0
 
     def start_move(self):
-        self.velocity = random.randint(1, 3)
+        self.velocity = self.velocity_memory[0]
 
     def x(self):
         return self.rect.x

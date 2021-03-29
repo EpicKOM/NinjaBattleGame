@@ -87,4 +87,5 @@ animations = {'ninja_throw_right': load_animation_images('ninja', 'throw_right')
               'zombie_female_attack_left': load_animation_images('zombie', 'female_attack_left'),
               'zombie_disappear': load_animation_images('zombie', 'disappear'),
               'kamehameha_kame_right': load_kame_images('kame_right'),
+              'kamehameha_kame_left': load_kame_images('kame_left'),
               }

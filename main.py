@@ -63,13 +63,11 @@ while running:
             game.player.animate('ninja', 'gover_right')
             if game.player.end_animation:
                 game.game_results = True
-                print(pygame.time.get_ticks())
 
         else:
             game.player.animate('ninja', 'gover_left')
             if game.player.end_animation:
                 game.game_results = True
-                print(pygame.time.get_ticks())
 
         if game.game_results:
             # Affichage des résultats de la partie
@@ -93,6 +91,7 @@ while running:
         game.player.all_fireball_right.draw(screen)
         game.player.all_fireball_left.draw(screen)
         game.player.all_kamehameha_right.draw(screen)
+        game.player.all_kamehameha_left.draw(screen)
 
         # Appliquer l'image des énemies
         game.all_zombies_right.draw(screen)
@@ -169,7 +168,7 @@ while running:
         for kamehameha in game.player.all_kamehameha_right:
             if kamehameha.throw_kamehameha:
                 game.sound_manager.stop('running_right')
-                game.player.kamehameha_enabled()
+                game.player.kamehameha_enabled_right()
                 kamehameha.animation_speed = 0.2
                 kamehameha.start_animation()
                 kamehameha.animate('kamehameha', 'kame_right')
@@ -187,13 +186,48 @@ while running:
 
                     else:
                         zombie.current_image = 0
+
+                for zombie in game.all_zombies_left:
+                    zombie.stop_move()
+                    if game.check_collision(zombie, game.player.all_kamehameha_right):
+
+                        if zombie.rect.x > 0 - zombie.image.get_width():
+                            zombie.animation_speed = 0.2
+                            zombie.animate('zombie', 'disappear')
+
+                            if zombie.end_animation:
+                                game.sound_manager.play('poof', 0.2, 0)
+                                zombie.kamehameha_damage()
+
+                    else:
+                        zombie.current_image = 0
+
             if kamehameha.end_animation:
                 for zombie in game.all_zombies_right:
+                    zombie.start_move()
+                for zombie in game.all_zombies_left:
                     zombie.start_move()
                 game.sound_manager.play('fatality', 0.9, 0)
                 game.player.idle_right()
                 game.player.start_move()
                 kamehameha.remove_right()
+                game.kamehameha_mode = False
+                game.player.throw_kamehameha = False
+
+        for kamehameha in game.player.all_kamehameha_left:
+            if kamehameha.throw_kamehameha:
+                game.sound_manager.stop('running_left')
+                game.player.kamehameha_enabled_left()
+                kamehameha.animation_speed = 0.2
+                kamehameha.start_animation()
+                kamehameha.animate('kamehameha', 'kame_left')
+                kamehameha.rect.x = game.player.rect.x + 55 - kamehameha.image.get_width()
+
+            if kamehameha.end_animation:
+                game.sound_manager.play('fatality', 0.9, 0)
+                game.player.idle_left()
+                game.player.start_move()
+                kamehameha.remove_left()
                 game.kamehameha_mode = False
                 game.player.throw_kamehameha = False
 
@@ -255,12 +289,15 @@ while running:
                 else:
                     game.sound_manager.play('duck', 0.06, 0)
 
-            elif event.key == pygame.K_q and not game.game_finish and len(game.player.all_kamehameha_right) < 1:
+            elif event.key == pygame.K_q and not game.game_finish and len(game.player.all_kamehameha_right) < 1 and len(game.player.all_kamehameha_left) < 1:
                 game.kamehameha_mode = True
                 game.sound_manager.play('bazooka', 0.5, 0)
                 game.player.throw_kamehameha = True
                 game.sound_manager.play('test1', 0.1, 0)
-                game.player.launch_kamehameha_right()
+                if 'right' in game.player.image_name or 'right' in game.player.image_name[0]:
+                    game.player.launch_kamehameha_right()
+                else:
+                    game.player.launch_kamehameha_left()
 
         elif event.type == pygame.KEYUP:
             game.key_pressed[event.key] = False
