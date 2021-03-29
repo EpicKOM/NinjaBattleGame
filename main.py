@@ -8,7 +8,7 @@ import pygame
 import sys
 from game import Game
 
-# Initialisation du module
+# Initialisation du module pygame
 pygame.init()
 
 #Définir une clock et le nombre de FPS
@@ -52,21 +52,29 @@ while running:
     screen.blit(fps_text, (screen.get_width() - fps_text.get_width() - 20, 20))
 
     # Partie terminée, GAME OVER
-    if game.game_finish:
+    if game.game_finish and not game.player.isJump:
         game.player.animation_speed = 0.1
         if game.finish_scene:
             game.player.animation = True
-            game.sound_manager.play('game_over', 0.06, 0)
+            game.sound_manager.play('game_over', 0.3, 0)
             game.finish_scene = False
-            print(game.kill)
 
         if 'right' in game.player.image_name or 'right' in game.player.image_name[0]:
             game.player.animate('ninja', 'gover_right')
+            if game.player.end_animation:
+                game.game_results = True
+                print(pygame.time.get_ticks())
+
         else:
             game.player.animate('ninja', 'gover_left')
+            if game.player.end_animation:
+                game.game_results = True
+                print(pygame.time.get_ticks())
 
-        # Affichage des résultats de la partie
-        game.game_over(screen)
+        if game.game_results:
+            # Affichage des résultats de la partie
+            game.game_over(screen)
+
 
     # Partie en cours
     else:
@@ -119,7 +127,7 @@ while running:
 
             if len(game.all_zombies_right) <= 0 and len(game.all_zombies_left) <= 0:
                 game.dismiss_monsters = False
-                pygame.time.wait(700)
+                pygame.time.wait(20)
                 game.game_finish = True
 
         else:
@@ -168,13 +176,15 @@ while running:
                 for zombie in game.all_zombies_right:
                     zombie.stop_move()
                     if game.check_collision(zombie, game.player.all_kamehameha_right):
+
                         if zombie.rect.x < 1080:
                             zombie.animation_speed = 0.2
                             zombie.animate('zombie', 'disappear')
+
                             if zombie.end_animation:
                                 game.sound_manager.play('poof', 0.2, 0)
-                                # zombie.remove()
                                 zombie.kamehameha_damage()
+
                     else:
                         zombie.current_image = 0
             if kamehameha.end_animation:
@@ -223,7 +233,7 @@ while running:
                 game.player.jump_animation = True
                 game.player.isJump = True
 
-            elif event.key == pygame.K_SPACE and game.game_finish:
+            elif event.key == pygame.K_SPACE and game.game_finish and game.game_replay:
                 game.game_finish = False
 
             elif event.key == pygame.K_d and not game.player.throw_animation and not game.game_finish and not game.kamehameha_mode:

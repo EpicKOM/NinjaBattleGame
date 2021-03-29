@@ -19,17 +19,15 @@ class Game(pygame.sprite.Sprite):
         self.game_finish = False
         self.finish_scene = True
         self.kamehameha_mode = False
+        self.game_results = False
+        self.game_replay = False
         self.sound_manager = SoundManager()
         self.spawn_right_zombie()
         self.spawn_right_zombie()
         self.spawn_right_zombie()
-
-
-
-
-
-
-
+        self.spawn_right_zombie()
+        self.spawn_right_zombie()
+        self.spawn_right_zombie()
 
 
 
@@ -55,14 +53,27 @@ class Game(pygame.sprite.Sprite):
         self.dismiss_monsters = True
 
     def game_over(self, surface):
-        GO_font = pygame.font.SysFont("arial", 95, True)
-        retry_font = pygame.font.SysFont("arial", 25, True)
-        kill_icon = pygame.image.load('assets/design/cross.png')
-        kill_icon = pygame.transform.scale(kill_icon, (32, 43))
+        go_font = pygame.font.SysFont("arial", 95, True)
+        rounds_font = pygame.font.SysFont("arial", 25, True)
+        results_font = pygame.font.SysFont("arial", 30, True)
 
-        GO_text = GO_font.render("Game Over", True, (255, 255, 255))
-        retry_text = retry_font.render("Appuyer sur espace pour recommencer une partie.", True, (255, 255, 255))
-        surface.blit(GO_text, ((surface.get_width() - GO_text.get_width()) / 2, 60))
-        surface.blit(kill_icon, (((surface.get_width() - GO_text.get_width())/2) + GO_text.get_width() / 2, 250))
+        go_text = go_font.render("Game Over", True, (255, 255, 255))
+        round_text = rounds_font.render("You Survived X Rounds", True, (255, 255, 255))
+        points_text = results_font.render("Points", True, (255, 234, 0))
+        kills_text = results_font.render("Kills", True, (57, 192, 237))
+        game_time_text = results_font.render("Game Time", True, (0, 230, 118))
+        retry_text = results_font.render("Press space to restart a game.", True, (255, 255, 255))
+
+        surface.blit(go_text, ((surface.get_width() - go_text.get_width()) / 2, 60))
+        surface.blit(round_text, ((surface.get_width() - round_text.get_width()) / 2, 180))
+        surface.blit(points_text, (150, 300))
+        surface.blit(kills_text, (((769 - (150 + points_text.get_width()))-kills_text.get_width())/2 + 150 + points_text.get_width(), 300))
+        surface.blit(game_time_text, (surface.get_width() - 150 - game_time_text.get_width(), 300))
+
+
+
+
         surface.blit(retry_text, ((surface.get_width() - retry_text.get_width()) / 2, 680))
+
+        self.game_replay = True
 
