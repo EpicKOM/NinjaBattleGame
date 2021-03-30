@@ -22,9 +22,23 @@ class Game(pygame.sprite.Sprite):
         self.game_results = False
         self.game_replay = False
         self.game_time = 0
+        self.game_counter = 0
+        self.round = 0
         self.sound_manager = SoundManager()
-        # self.spawn_right_zombie()
-        # self.spawn_left_zombie()
+        self.game_management()
+
+    def game_management(self):
+        self.round += 1
+        total_spawn = 2*self.round
+        print(total_spawn)
+        spawn_right = random.randint(1, (total_spawn - 1))
+        print(spawn_right)
+        spawn_left = total_spawn - spawn_right
+        print(spawn_left)
+        a = 0
+        while a < spawn_right:
+            self.spawn_right_zombie()
+            a += 1
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)

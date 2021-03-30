@@ -30,6 +30,7 @@ class Zombie(animation.AnimateSprite):
         # Si le zombie est K.O
         if self.health <= 0:
             self.game.kill += 1
+            self.game.game_counter += 1
             self.game.total_points += self.points
             self.health = self.max_health
             if self in self.game.all_zombies_right:
@@ -48,6 +49,7 @@ class Zombie(animation.AnimateSprite):
         # Si le zombie est K.O
         if self.health <= 0:
             self.game.kill += 1
+            self.game.game_counter += 1
             self.game.total_points += self.points
             self.game.player.magic_power += self.magic
             self.health = self.max_health

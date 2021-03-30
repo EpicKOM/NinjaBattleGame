@@ -11,7 +11,7 @@ from game import Game
 # Initialisation du module pygame
 pygame.init()
 
-#Définir une clock et le nombre de FPS
+# Définir une clock et le nombre de FPS
 clock = pygame.time.Clock()
 FPS = 70
 
@@ -30,6 +30,12 @@ magic_icon = pygame.transform.scale(magic_icon, (19, 30))
 
 # Chargement de la police d'écriture
 font_game = pygame.font.SysFont('arial', 20, True)
+
+# Userevent
+
+# pygame.time.set_timer(pygame.USEREVENT, 2000)
+# event_num = pygame.USEREVENT
+ROUND_SONG_END = pygame.USEREVENT
 
 game = Game()
 running = True
@@ -56,7 +62,7 @@ while running:
         game.player.animation_speed = 0.1
         if game.finish_scene:
             game.player.animation = True
-            game.sound_manager.play('game_over', 0.3, 0)
+            game.sound_manager.play('game_over', 0.2, 0)
             game.finish_scene = False
 
         if 'right' in game.player.image_name or 'right' in game.player.image_name[0]:
@@ -73,9 +79,20 @@ while running:
             # Affichage des résultats de la partie
             game.game_over(screen)
 
-
     # Partie en cours
     else:
+        if game.game_counter == 1:
+            for zombie in game.all_zombies_right:
+                if zombie.rect.x >= 1080:
+                    zombie.kill()
+                if zombie.rect.x + zombie.image.get_width() <= 0:
+                    zombie.kill()
+            if len(game.all_zombies_right) <= 0:
+                pygame.mixer.music.set_endevent(ROUND_SONG_END)
+                pygame.mixer.music.load('assets/sounds/game_over.mp3')
+                pygame.mixer.music.play()
+                game.game_counter = 0
+
         # Affichage de l'icone magie
         screen.blit(magic_icon, (20, 20))
         killed_text = font_game.render(f'{game.kill}', True, (255, 255, 255))
@@ -311,5 +328,8 @@ while running:
                 game.sound_manager.stop('running_left')
                 game.player.idle_left()
                 game.player.stop_animation()
+
+        elif event.type == ROUND_SONG_END:
+            game.game_management()
 
     clock.tick(FPS)
