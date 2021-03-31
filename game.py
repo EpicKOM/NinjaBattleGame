@@ -22,13 +22,15 @@ class Game(pygame.sprite.Sprite):
         self.game_results = False
         self.game_replay = False
         self.game_time = 0
-        self.game_counter = 0
+        self.monster_counter = 0
         self.round = 0
+        self.target_number = 0
         self.sound_manager = SoundManager()
-        self.game_management()
 
-    def game_management(self):
+    def game_engine(self):
         self.round += 1
+        self.target_number += 10
+        self.monster_counter = 0
         total_spawn = 2*self.round
         print(total_spawn)
         spawn_right = random.randint(1, (total_spawn - 1))
@@ -36,9 +38,15 @@ class Game(pygame.sprite.Sprite):
         spawn_left = total_spawn - spawn_right
         print(spawn_left)
         a = 0
+        b = 0
+
         while a < spawn_right:
             self.spawn_right_zombie()
             a += 1
+
+        while b < spawn_left:
+            self.spawn_right_zombie()
+            b += 1
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)
@@ -75,7 +83,7 @@ class Game(pygame.sprite.Sprite):
         hours = int(hours)
 
         go_text = go_font.render("Game Over", True, (255, 255, 255))
-        round_text = rounds_font.render("You Survived X Rounds", True, (255, 255, 255))
+        round_text = rounds_font.render(f"You Survived {self.round} Rounds", True, (255, 255, 255))
         points_text = results_font.render("Points", True, (255, 234, 0))
         points_nb = results_font.render(f"{self.total_points}", True, (255, 234, 0))
         kills_text = results_font.render("Kills", True, (57, 192, 237))

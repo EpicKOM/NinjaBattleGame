@@ -31,10 +31,9 @@ magic_icon = pygame.transform.scale(magic_icon, (19, 30))
 # Chargement de la police d'écriture
 font_game = pygame.font.SysFont('arial', 20, True)
 
-# Userevent
+# Déclaration des Userevent
 
 # pygame.time.set_timer(pygame.USEREVENT, 2000)
-# event_num = pygame.USEREVENT
 ROUND_SONG_END = pygame.USEREVENT
 
 game = Game()
@@ -81,22 +80,46 @@ while running:
 
     # Partie en cours
     else:
-        if game.game_counter == 1:
+        # Moteur du jeu, Gestion des niveaux
+        if game.monster_counter >= game.target_number:
             for zombie in game.all_zombies_right:
                 if zombie.rect.x >= 1080:
                     zombie.kill()
                 if zombie.rect.x + zombie.image.get_width() <= 0:
                     zombie.kill()
-            if len(game.all_zombies_right) <= 0:
-                pygame.mixer.music.set_endevent(ROUND_SONG_END)
-                pygame.mixer.music.load('assets/sounds/game_over.mp3')
-                pygame.mixer.music.play()
-                game.game_counter = 0
+
+            for zombie in game.all_zombies_left:
+                if zombie.rect.x >= 1080:
+                    zombie.kill()
+                if zombie.rect.x<= 0:
+                    zombie.kill()
+            if len(game.all_zombies_right) and len(game.all_zombies_left) <= 0:
+                if game.round % 2 == 0:
+                    print("paire 2eme musique")
+                    pygame.mixer.music.set_endevent(ROUND_SONG_END)
+                    pygame.mixer.music.load('assets/sounds/game_over.mp3')
+                    pygame.mixer.music.play()
+                else:
+                    print("impaire 1ere musique")
+                    pygame.mixer.music.set_endevent(ROUND_SONG_END)
+                    pygame.mixer.music.load('assets/sounds/game_over.mp3')
+                    pygame.mixer.music.play()
+
+                if game.round == 0:
+                    game.monster_counter = -1
+                else:
+                    game.monster_counter = 0
 
         # Affichage de l'icone magie
         screen.blit(magic_icon, (20, 20))
         killed_text = font_game.render(f'{game.kill}', True, (255, 255, 255))
+        round_text = font_game.render(f'{game.round}', True, (255, 255, 255))
+        counter_text = font_game.render(f'{game.monster_counter}', True, (255, 255, 255))
+        bite_text = font_game.render(f'{game.target_number}', True, (255, 255, 255))
         screen.blit(killed_text, (20, 70))
+        screen.blit(round_text, (20, 120))
+        screen.blit(counter_text, (20, 180))
+        screen.blit(bite_text, (60, 120))
 
         # Affichage des jauges de vie et de magie du joueur
         game.player.update_health_bar(screen)
@@ -330,6 +353,6 @@ while running:
                 game.player.stop_animation()
 
         elif event.type == ROUND_SONG_END:
-            game.game_management()
+            game.game_engine()
 
     clock.tick(FPS)
