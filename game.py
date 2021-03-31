@@ -44,9 +44,9 @@ class Game(pygame.sprite.Sprite):
             self.spawn_right_zombie()
             a += 1
 
-        while b < spawn_left:
-            self.spawn_right_zombie()
-            b += 1
+        # while b < spawn_left:
+        #     self.spawn_right_zombie()
+        #     b += 1
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)

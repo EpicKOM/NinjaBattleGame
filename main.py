@@ -88,21 +88,21 @@ while running:
                 if zombie.rect.x + zombie.image.get_width() <= 0:
                     zombie.kill()
 
-            for zombie in game.all_zombies_left:
-                if zombie.rect.x >= 1080:
-                    zombie.kill()
-                if zombie.rect.x<= 0:
-                    zombie.kill()
-            if len(game.all_zombies_right) and len(game.all_zombies_left) <= 0:
+            # for zombie in game.all_zombies_left:
+            #     if zombie.rect.x >= 1080:
+            #         zombie.kill()
+            #     if zombie.rect.x <= 0:
+            #         zombie.kill()
+            if len(game.all_zombies_right) <= 0:
                 if game.round % 2 == 0:
                     print("paire 2eme musique")
                     pygame.mixer.music.set_endevent(ROUND_SONG_END)
-                    pygame.mixer.music.load('assets/sounds/game_over.mp3')
+                    pygame.mixer.music.load('assets/music/new_round_pair.mp3')
                     pygame.mixer.music.play()
                 else:
                     print("impaire 1ere musique")
                     pygame.mixer.music.set_endevent(ROUND_SONG_END)
-                    pygame.mixer.music.load('assets/sounds/game_over.mp3')
+                    pygame.mixer.music.load('assets/music/new_round_impair.mp3')
                     pygame.mixer.music.play()
 
                 if game.round == 0:
