@@ -27,14 +27,21 @@ background = pygame.image.load('assets/design/bg.jpg')
 background_bw = pygame.image.load('assets/design/bg_bw.jpg')
 magic_icon = pygame.image.load('assets/design/magic.png')
 magic_icon = pygame.transform.scale(magic_icon, (19, 30))
+rounds_image = pygame.image.load('assets/design/rounds.png')
+rounds_image = pygame.transform.scale(rounds_image, (80, 69))
 
 # Chargement de la police d'écriture
 font_game = pygame.font.SysFont('arial', 20, True)
+font_rounds = pygame.font.SysFont('monospace', 40, True)
+
+# ----------------------------------------------------------------------------------------------------------------------
 
 # Déclaration des Userevent
 
-# pygame.time.set_timer(pygame.USEREVENT, 2000)
+# Evénement lors de la fin du round song
 ROUND_SONG_END = pygame.USEREVENT
+# pygame.time.set_timer(pygame.USEREVENT, 2000)
+
 
 game = Game()
 running = True
@@ -60,6 +67,10 @@ while running:
     if game.game_finish and not game.player.isJump:
         game.player.animation_speed = 0.1
         if game.finish_scene:
+            if pygame.mixer.get_busy():
+                pygame.mixer.stop()
+            elif pygame.mixer.music.get_busy():
+                pygame.mixer.music.stop()
             game.player.animation = True
             game.sound_manager.play('game_over', 0.2, 0)
             game.finish_scene = False
@@ -80,7 +91,9 @@ while running:
 
     # Partie en cours
     else:
-        # Moteur du jeu, Gestion des niveaux
+
+        # Gestion du déclenchement d'un nouveau niveau
+        # -------------------------------------------------------------------------------
         if game.monster_counter >= game.target_number:
             for zombie in game.all_zombies_right:
                 if zombie.rect.x >= 1080:
@@ -88,19 +101,18 @@ while running:
                 if zombie.rect.x + zombie.image.get_width() <= 0:
                     zombie.kill()
 
-            # for zombie in game.all_zombies_left:
-            #     if zombie.rect.x >= 1080:
-            #         zombie.kill()
-            #     if zombie.rect.x <= 0:
-            #         zombie.kill()
-            if len(game.all_zombies_right) <= 0:
+            for zombie in game.all_zombies_left:
+                if zombie.rect.x >= 1080:
+                    zombie.kill()
+                if zombie.rect.x - zombie.image.get_width() <= 0:
+                    zombie.kill()
+
+            if len(game.all_zombies_right) <= 0 and len(game.all_zombies_left) <= 0:
                 if game.round % 2 == 0:
-                    print("paire 2eme musique")
                     pygame.mixer.music.set_endevent(ROUND_SONG_END)
                     pygame.mixer.music.load('assets/music/new_round_pair.mp3')
                     pygame.mixer.music.play()
                 else:
-                    print("impaire 1ere musique")
                     pygame.mixer.music.set_endevent(ROUND_SONG_END)
                     pygame.mixer.music.load('assets/music/new_round_impair.mp3')
                     pygame.mixer.music.play()
@@ -113,13 +125,14 @@ while running:
         # Affichage de l'icone magie
         screen.blit(magic_icon, (20, 20))
         killed_text = font_game.render(f'{game.kill}', True, (255, 255, 255))
-        round_text = font_game.render(f'{game.round}', True, (255, 255, 255))
+        round_text = font_rounds.render(f'{game.round}', True, (249, 49, 84))
         counter_text = font_game.render(f'{game.monster_counter}', True, (255, 255, 255))
         bite_text = font_game.render(f'{game.target_number}', True, (255, 255, 255))
-        screen.blit(killed_text, (20, 70))
-        screen.blit(round_text, (20, 120))
-        screen.blit(counter_text, (20, 180))
-        screen.blit(bite_text, (60, 120))
+        screen.blit(rounds_image, ((240 - rounds_image.get_width())/2 + 20, 40 + magic_icon.get_width()))
+        screen.blit(round_text, (100 + (rounds_image.get_width() - round_text.get_width()) / 2, 74))
+        screen.blit(killed_text, (520, 70))
+        screen.blit(counter_text, (520, 180))
+        screen.blit(bite_text, (560, 120))
 
         # Affichage des jauges de vie et de magie du joueur
         game.player.update_health_bar(screen)
@@ -263,7 +276,41 @@ while running:
                 kamehameha.animate('kamehameha', 'kame_left')
                 kamehameha.rect.x = game.player.rect.x + 55 - kamehameha.image.get_width()
 
+                for zombie in game.all_zombies_left:
+                    zombie.stop_move()
+                    if game.check_collision(zombie, game.player.all_kamehameha_left):
+
+                        if zombie.rect.x > 0 - zombie.image.get_width():
+                            zombie.animation_speed = 0.2
+                            zombie.animate('zombie', 'disappear')
+
+                            if zombie.end_animation:
+                                game.sound_manager.play('poof', 0.2, 0)
+                                zombie.kamehameha_damage()
+
+                    else:
+                        zombie.current_image = 0
+
+                for zombie in game.all_zombies_right:
+                    zombie.stop_move()
+                    if game.check_collision(zombie, game.player.all_kamehameha_left):
+
+                        if zombie.rect.x < 1080:
+                            zombie.animation_speed = 0.2
+                            zombie.animate('zombie', 'disappear')
+
+                            if zombie.end_animation:
+                                game.sound_manager.play('poof', 0.2, 0)
+                                zombie.kamehameha_damage()
+
+                    else:
+                        zombie.current_image = 0
+
             if kamehameha.end_animation:
+                for zombie in game.all_zombies_right:
+                    zombie.start_move()
+                for zombie in game.all_zombies_left:
+                    zombie.start_move()
                 game.sound_manager.play('fatality', 0.9, 0)
                 game.player.idle_left()
                 game.player.start_move()
@@ -308,7 +355,9 @@ while running:
                 game.player.isJump = True
 
             elif event.key == pygame.K_SPACE and game.game_finish and game.game_replay:
-                game.game_finish = False
+                # game.game_finish = False
+                print('The replay function is not yet implemented.\nTo replay, close the window and restart the '
+                      'main.py program')
 
             elif event.key == pygame.K_d and not game.player.throw_animation and not game.game_finish and not game.kamehameha_mode:
                 game.player.throw_animation = True
@@ -352,6 +401,7 @@ while running:
                 game.player.idle_left()
                 game.player.stop_animation()
 
+        # Déclenchement du générateur de niveau (game engine) à la fin d'un new round song
         elif event.type == ROUND_SONG_END:
             game.game_engine()
 

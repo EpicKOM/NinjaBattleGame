@@ -32,21 +32,21 @@ class Game(pygame.sprite.Sprite):
         self.target_number += 10
         self.monster_counter = 0
         total_spawn = 2*self.round
-        print(total_spawn)
+        # print(total_spawn)
         spawn_right = random.randint(1, (total_spawn - 1))
-        print(spawn_right)
+        # print(spawn_right)
         spawn_left = total_spawn - spawn_right
-        print(spawn_left)
-        a = 0
-        b = 0
+        # print(spawn_left)
+        spawn_right_counter = 0
+        spawn_left_counter = 0
 
-        while a < spawn_right:
+        while spawn_right_counter < spawn_right:
             self.spawn_right_zombie()
-            a += 1
+            spawn_right_counter += 1
 
-        # while b < spawn_left:
-        #     self.spawn_right_zombie()
-        #     b += 1
+        while spawn_left_counter < spawn_left:
+            self.spawn_left_zombie()
+            spawn_left_counter += 1
 
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)
