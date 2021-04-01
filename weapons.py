@@ -48,7 +48,7 @@ class Kunai(pygame.sprite.Sprite):
             zombie.damage(self.attack)
 
         # Vérifier si le Kunai est encore sur l'écran
-        if self.rect.x < 0:
+        if self.rect.x < 0 - self.image.get_width():
             self.remove_left()
 
 
@@ -112,7 +112,7 @@ class Fireball(pygame.sprite.Sprite):
             zombie.damage(self.attack)
 
         # Vérifier si la Fireball est encore sur l'écran
-        if self.rect.x < 0:
+        if self.rect.x < 0 -self.image.get_width():
             self.remove_left()
 
 

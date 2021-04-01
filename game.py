@@ -27,6 +27,9 @@ class Game(pygame.sprite.Sprite):
         self.target_number = 0
         self.sound_manager = SoundManager()
 
+
+
+
     def game_engine(self):
         self.round += 1
         self.target_number += 10

@@ -107,7 +107,7 @@ while running:
                 if zombie.rect.x - zombie.image.get_width() <= 0:
                     zombie.kill()
 
-            if len(game.all_zombies_right) <= 0 and len(game.all_zombies_left) <= 0:
+            if len(game.all_zombies_left) <= 0 and len(game.all_zombies_right) <= 0:
                 if game.round % 2 == 0:
                     pygame.mixer.music.set_endevent(ROUND_SONG_END)
                     pygame.mixer.music.load('assets/music/new_round_pair.mp3')
