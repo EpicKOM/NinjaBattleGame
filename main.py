@@ -6,6 +6,7 @@
 
 import pygame
 import sys
+import random
 from game import Game
 
 # Initialisation du module pygame
@@ -40,7 +41,8 @@ font_rounds = pygame.font.SysFont('monospace', 40, True)
 
 # Evénement lors de la fin du round song
 ROUND_SONG_END = pygame.USEREVENT
-# pygame.time.set_timer(pygame.USEREVENT, 2000)
+ZOMBIES_SCREAM = pygame.USEREVENT + 1
+pygame.time.set_timer(ZOMBIES_SCREAM, 10000)
 
 
 game = Game()
@@ -404,5 +406,10 @@ while running:
         # Déclenchement du générateur de niveau (game engine) à la fin d'un new round song
         elif event.type == ROUND_SONG_END:
             game.game_engine()
+
+        elif event.type == ZOMBIES_SCREAM and len(game.all_zombies_left) > 0 and len(game.all_zombies_right) > 0:
+            zombie_sound = random.choice(['song1', 'song2', 'song3'])
+            # game.sound_manager.play(f'{zombie_sound}', 0.08, 0)
+            print(zombie_sound)
 
     clock.tick(FPS)
