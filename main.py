@@ -126,15 +126,9 @@ while running:
 
         # Affichage de l'icone magie
         screen.blit(magic_icon, (20, 20))
-        killed_text = font_game.render(f'{game.kill}', True, (255, 255, 255))
         round_text = font_rounds.render(f'{game.round}', True, (249, 49, 84))
-        counter_text = font_game.render(f'{game.monster_counter}', True, (255, 255, 255))
-        bite_text = font_game.render(f'{game.target_number}', True, (255, 255, 255))
         screen.blit(rounds_image, ((240 - rounds_image.get_width())/2 + 20, 40 + magic_icon.get_width()))
         screen.blit(round_text, (100 + (rounds_image.get_width() - round_text.get_width()) / 2, 74))
-        screen.blit(killed_text, (520, 70))
-        screen.blit(counter_text, (520, 180))
-        screen.blit(bite_text, (560, 120))
 
         # Affichage des jauges de vie et de magie du joueur
         game.player.update_health_bar(screen)
@@ -388,14 +382,18 @@ while running:
                     game.sound_manager.play('duck', 0.06, 0)
 
             elif event.key == pygame.K_q and not game.game_finish and len(game.player.all_kamehameha_right) < 1 and len(game.player.all_kamehameha_left) < 1:
-                game.kamehameha_mode = True
-                game.sound_manager.play('bazooka', 0.5, 0)
-                game.player.throw_kamehameha = True
-                game.sound_manager.play('test1', 0.1, 0)
-                if 'right' in game.player.image_name or 'right' in game.player.image_name[0]:
-                    game.player.launch_kamehameha_right()
+                if game.player.magic_power >= game.player.max_magic_power:
+                    game.kamehameha_mode = True
+                    game.sound_manager.play('bazooka', 0.5, 0)
+                    game.player.throw_kamehameha = True
+                    game.sound_manager.play('test1', 0.1, 0)
+                    if 'right' in game.player.image_name or 'right' in game.player.image_name[0]:
+                        game.player.launch_kamehameha_right()
+                    else:
+                        game.player.launch_kamehameha_left()
+
                 else:
-                    game.player.launch_kamehameha_left()
+                    game.sound_manager.play('duck', 0.06, 0)
 
         elif event.type == pygame.KEYUP:
             game.key_pressed[event.key] = False

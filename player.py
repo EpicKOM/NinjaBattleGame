@@ -107,7 +107,6 @@ class Ninja(animation.AnimateSprite):
         kunai_right.rect.x = self.rect.x + 55
         kunai_right.rect.y = self.rect.y + 60
         if not self.game.key_pressed.get(pygame.K_RIGHT):
-            print('bite')
             kunai_right.attack = 20
         self.all_kunai_right.add(kunai_right)
         self.animation_speed = 0.2
@@ -121,7 +120,6 @@ class Ninja(animation.AnimateSprite):
         kunai_left.rect.x = self.rect.x - 3
         kunai_left.rect.y = self.rect.y + 60
         if not self.game.key_pressed.get(pygame.K_LEFT):
-            print('caca')
             kunai_left.attack = 20
         self.all_kunai_left.add(kunai_left)
         self.animation_speed = 0.2
@@ -130,6 +128,8 @@ class Ninja(animation.AnimateSprite):
     def launch_fireball_right(self):
         self.health_bar_position = 10
         fireball_right = Fireball(self)
+        if not self.game.key_pressed.get(pygame.K_RIGHT):
+            fireball_right.attack = 50
         self.all_fireball_right.add(fireball_right)
         self.animation_speed = 0.2
         self.start_animation()
@@ -139,6 +139,8 @@ class Ninja(animation.AnimateSprite):
         self.health_bar_position = -15
         fireball_left = Fireball(self)
         fireball_left.rect.x = self.rect.x - 3
+        if not self.game.key_pressed.get(pygame.K_RIGHT):
+            fireball_left.attack = 50
         self.all_fireball_left.add(fireball_left)
         self.animation_speed = 0.2
         self.start_animation()
