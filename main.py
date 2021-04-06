@@ -146,6 +146,9 @@ while running:
         game.all_zombies_right.draw(screen)
         game.all_zombies_left.draw(screen)
 
+        # Appliquer l'image des items
+        game.all_heart.draw(screen)
+
         for fireball in game.player.all_fireball_right:
             fireball.move_right()
 
@@ -320,6 +323,9 @@ while running:
                 kamehameha.remove_left()
                 game.kamehameha_mode = False
                 game.player.throw_kamehameha = False
+
+        for heart in game.all_heart:
+            heart.move()
 
     # Mise à jour de l'écran
     pygame.display.flip()

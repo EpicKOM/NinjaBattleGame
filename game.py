@@ -2,6 +2,7 @@ import pygame
 import random
 from player import Ninja
 from enemies import Zombie
+from items import Heart, Flask
 from sounds import SoundManager
 
 
@@ -13,6 +14,8 @@ class Game(pygame.sprite.Sprite):
         self.player_group = pygame.sprite.Group(self.player)
         self.all_zombies_right = pygame.sprite.Group()
         self.all_zombies_left = pygame.sprite.Group()
+        self.all_heart = pygame.sprite.Group()
+        self.all_flask = pygame.sprite.Group()
         self.kill = 0
         self.dismiss_monsters = False
         self.total_points = 0
@@ -26,6 +29,7 @@ class Game(pygame.sprite.Sprite):
         self.round = 0
         self.target_number = 0
         self.sound_manager = SoundManager()
+        self.spawn_heart()
 
     def game_engine(self):
         self.round += 1
@@ -54,6 +58,14 @@ class Game(pygame.sprite.Sprite):
         zombie_left = Zombie(self)
         zombie_left.rect.x = 0 - zombie_left.image.get_width() - random.randint(0, 300)
         self.all_zombies_left.add(zombie_left)
+
+    def spawn_heart(self):
+        heart = Heart(self)
+        self.all_heart.add(heart)
+
+    def spawn_flask(self):
+        flask = Flask(self)
+        self.all_flask.add(flask)
 
     def check_collision(self, sprite, group):
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
