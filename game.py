@@ -27,19 +27,13 @@ class Game(pygame.sprite.Sprite):
         self.target_number = 0
         self.sound_manager = SoundManager()
 
-
-
-
     def game_engine(self):
         self.round += 1
         self.target_number += 10
         self.monster_counter = 0
         total_spawn = 2*self.round
-        # print(total_spawn)
         spawn_right = random.randint(1, (total_spawn - 1))
-        # print(spawn_right)
         spawn_left = total_spawn - spawn_right
-        # print(spawn_left)
         spawn_right_counter = 0
         spawn_left_counter = 0
 
@@ -92,7 +86,7 @@ class Game(pygame.sprite.Sprite):
         kills_text = results_font.render("Kills", True, (57, 192, 237))
         kills_nb = results_font.render(f"{self.kill}", True, (57, 192, 237))
         game_time_text = results_font.render("Game Time", True, (0, 230, 118))
-        game_time_nb = results_font.render(f"{hours}:{minutes}:{seconds}", True, (0, 230, 118))
+        game_time_nb = results_font.render(f"{hours:02d}:{minutes:02d}:{seconds:02d}", True, (0, 230, 118))
         retry_text = results_font.render("Press space to restart a game.", True, (255, 255, 255))
 
         surface.blit(go_text, ((surface.get_width() - go_text.get_width()) / 2, 60))

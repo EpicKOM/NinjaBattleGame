@@ -139,9 +139,11 @@ class Zombie(animation.AnimateSprite):
     def stop_move(self):
         self.velocity_memory.append(self.velocity)
         self.velocity = 0
+        self.attack = 0
 
     def start_move(self):
         self.velocity = self.velocity_memory[0]
+        self.attack = 0.4
 
     def x(self):
         return self.rect.x

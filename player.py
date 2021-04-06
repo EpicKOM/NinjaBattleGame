@@ -27,7 +27,7 @@ class Ninja(animation.AnimateSprite):
         self.max_health = 100
         self.ko_alert = False
         self.health = 100
-        self.attack = 20
+        self.attack = 15
         self.health_bar_position = 10
         self.magic_power = 0
         self.max_magic_power = 200
@@ -106,6 +106,9 @@ class Ninja(animation.AnimateSprite):
         kunai_right.image = pygame.transform.scale(kunai_right.image, (50, 10))
         kunai_right.rect.x = self.rect.x + 55
         kunai_right.rect.y = self.rect.y + 60
+        if not self.game.key_pressed.get(pygame.K_RIGHT):
+            print('bite')
+            kunai_right.attack = 20
         self.all_kunai_right.add(kunai_right)
         self.animation_speed = 0.2
         self.start_animation()
@@ -117,6 +120,9 @@ class Ninja(animation.AnimateSprite):
         kunai_left.image = pygame.transform.scale(kunai_left.image, (50, 10))
         kunai_left.rect.x = self.rect.x - 3
         kunai_left.rect.y = self.rect.y + 60
+        if not self.game.key_pressed.get(pygame.K_LEFT):
+            print('caca')
+            kunai_left.attack = 20
         self.all_kunai_left.add(kunai_left)
         self.animation_speed = 0.2
         self.start_animation()

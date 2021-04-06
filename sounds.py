@@ -17,6 +17,13 @@ class SoundManager:
             'test1': pygame.mixer.Sound("assets/sounds/test1.mp3"),
             'ko': pygame.mixer.Sound("assets/sounds/ko.mp3"),
             'bazooka': pygame.mixer.Sound("assets/sounds/bazooka.mp3"),
+            'zombie_1': pygame.mixer.Sound("assets/sounds/zombie_sound_1.mp3"),
+            'zombie_2': pygame.mixer.Sound("assets/sounds/zombie_sound_2.mp3"),
+            'zombie_3': pygame.mixer.Sound("assets/sounds/zombie_sound_3.mp3"),
+            'zombie_4': pygame.mixer.Sound("assets/sounds/zombie_sound_4.mp3"),
+            'zombie_5': pygame.mixer.Sound("assets/sounds/zombie_sound_5.mp3"),
+            'zombie_6': pygame.mixer.Sound("assets/sounds/zombie_sound_6.mp3"),
+            'zombie_7': pygame.mixer.Sound("assets/sounds/zombie_sound_7.mp3"),
         }
 
     def play(self, name, volume, loop):

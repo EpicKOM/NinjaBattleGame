@@ -42,7 +42,7 @@ font_rounds = pygame.font.SysFont('monospace', 40, True)
 # Evénement lors de la fin du round song
 ROUND_SONG_END = pygame.USEREVENT
 ZOMBIES_SCREAM = pygame.USEREVENT + 1
-pygame.time.set_timer(ZOMBIES_SCREAM, 10000)
+pygame.time.set_timer(ZOMBIES_SCREAM, 45000)
 
 
 game = Game()
@@ -71,7 +71,7 @@ while running:
         if game.finish_scene:
             if pygame.mixer.get_busy():
                 pygame.mixer.stop()
-            elif pygame.mixer.music.get_busy():
+            if pygame.mixer.music.get_busy():
                 pygame.mixer.music.stop()
             game.player.animation = True
             game.sound_manager.play('game_over', 0.2, 0)
@@ -106,7 +106,7 @@ while running:
             for zombie in game.all_zombies_left:
                 if zombie.rect.x >= 1080:
                     zombie.kill()
-                if zombie.rect.x - zombie.image.get_width() <= 0:
+                if zombie.rect.x + zombie.image.get_width() <= 0:
                     zombie.kill()
 
             if len(game.all_zombies_left) <= 0 and len(game.all_zombies_right) <= 0:
@@ -188,6 +188,10 @@ while running:
             for zombie in game.all_zombies_right:
                 zombie.move_left()
                 zombie.animate('zombie', f'{zombie.random_zombie}walk_left')
+                if zombie.rect.x == 1080:
+                    zombie_sound = random.choice(['zombie_1', 'zombie_2', 'zombie_3', 'zombie_6', 'zombie_7'])
+                    game.sound_manager.play(f'{zombie_sound}', 0.1, 0)
+
                 if zombie.zombie_attack and not zombie.attack_reverse:
                     zombie.animate('zombie', f'{zombie.random_zombie}attack_left')
                 elif zombie.zombie_attack and zombie.attack_reverse:
@@ -197,6 +201,9 @@ while running:
             for zombie in game.all_zombies_left:
                 zombie.move_right()
                 zombie.animate('zombie', f'{zombie.random_zombie}walk_right')
+                if zombie.rect.x == 0:
+                    zombie_sound = random.choice(['zombie_1', 'zombie_2', 'zombie_3', 'zombie_6', 'zombie_7'])
+                    game.sound_manager.play(f'{zombie_sound}', 0.1, 0)
                 if zombie.zombie_attack and not zombie.attack_reverse:
                     zombie.animate('zombie', f'{zombie.random_zombie}attack_right')
                 elif zombie.zombie_attack and zombie.attack_reverse:
@@ -408,8 +415,10 @@ while running:
             game.game_engine()
 
         elif event.type == ZOMBIES_SCREAM and len(game.all_zombies_left) > 0 and len(game.all_zombies_right) > 0:
-            zombie_sound = random.choice(['song1', 'song2', 'song3'])
-            # game.sound_manager.play(f'{zombie_sound}', 0.08, 0)
-            print(zombie_sound)
+            if pygame.mixer.get_busy():
+                pass
+            else:
+                zombie_sound = random.choice(['zombie_4', 'zombie_5'])
+                game.sound_manager.play(f'{zombie_sound}', 0.1, 0)
 
     clock.tick(FPS)

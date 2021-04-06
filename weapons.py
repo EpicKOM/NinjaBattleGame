@@ -62,8 +62,8 @@ class Fireball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = self.player.rect.x + 55
         self.rect.y = self.player.rect.y + 45
-        self.attack = 20
-        self.magic = 40
+        self.attack = 40
+        self.magic = 30
         self.origin_image = self.image
         self.angle = 0
 
