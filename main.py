@@ -42,7 +42,12 @@ font_rounds = pygame.font.SysFont('monospace', 40, True)
 # Evénement lors de la fin du round song
 ROUND_SONG_END = pygame.USEREVENT
 ZOMBIES_SCREAM = pygame.USEREVENT + 1
-pygame.time.set_timer(ZOMBIES_SCREAM, 45000)
+HEART_BONUS = pygame.USEREVENT + 2
+POISON = pygame.USEREVENT + 3
+
+pygame.time.set_timer(ZOMBIES_SCREAM, 15000)
+pygame.time.set_timer(HEART_BONUS, 105000)
+pygame.time.set_timer(POISON, 60000)
 
 
 game = Game()
@@ -113,10 +118,12 @@ while running:
                 if game.round % 2 == 0:
                     pygame.mixer.music.set_endevent(ROUND_SONG_END)
                     pygame.mixer.music.load('assets/music/new_round_pair.mp3')
+                    pygame.mixer.music.set_volume(0.3)
                     pygame.mixer.music.play()
                 else:
                     pygame.mixer.music.set_endevent(ROUND_SONG_END)
                     pygame.mixer.music.load('assets/music/new_round_impair.mp3')
+                    pygame.mixer.music.set_volume(0.3)
                     pygame.mixer.music.play()
 
                 if game.round == 0:
@@ -148,6 +155,7 @@ while running:
 
         # Appliquer l'image des items
         game.all_heart.draw(screen)
+        game.all_flask.draw(screen)
 
         for fireball in game.player.all_fireball_right:
             fireball.move_right()
@@ -327,6 +335,9 @@ while running:
         for heart in game.all_heart:
             heart.move()
 
+        for poison in game.all_flask:
+            poison.move()
+
     # Mise à jour de l'écran
     pygame.display.flip()
 
@@ -424,5 +435,11 @@ while running:
             else:
                 zombie_sound = random.choice(['zombie_4', 'zombie_5'])
                 game.sound_manager.play(f'{zombie_sound}', 0.1, 0)
+
+        elif event.type == HEART_BONUS and len(game.all_zombies_left) > 0 and len(game.all_zombies_right) > 0:
+            game.spawn_heart()
+
+        elif event.type == POISON and len(game.all_zombies_left) > 0 and len(game.all_zombies_right) > 0:
+            game.spawn_flask()
 
     clock.tick(FPS)

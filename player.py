@@ -56,7 +56,8 @@ class Ninja(animation.AnimateSprite):
             pygame.draw.rect(surface, (213, 49, 84), [270, 20 + (height / 2) - 14, 40, 28], 3, 3, 3, 3)
             font_ko = pygame.font.SysFont('arial', 16, True)
             ko_text = font_ko.render("KO", True, (255, 255, 255))
-            surface.blit(ko_text, (270 + (40 - ko_text.get_width()) / 2, 20 + (height / 2) - (14 - (28 - ko_text.get_height()) / 2)))
+            surface.blit(ko_text, (
+            270 + (40 - ko_text.get_width()) / 2, 20 + (height / 2) - (14 - (28 - ko_text.get_height()) / 2)))
 
             if self.ko_alert:
                 self.game.sound_manager.play('ko', 0.4, 0)
@@ -68,19 +69,26 @@ class Ninja(animation.AnimateSprite):
         elif self.max_magic_power <= 0:
             self.magic_power = 0
 
-        pygame.draw.rect(surface, (46, 46, 46), [60, 20 + (height/2) - 6, 200, 10])
-        pygame.draw.rect(surface, (13, 71, 161), [60, 20 + (height/2) - 6, self.magic_power, 10])
+        pygame.draw.rect(surface, (46, 46, 46), [60, 20 + (height / 2) - 6, 200, 10])
+        pygame.draw.rect(surface, (13, 71, 161), [60, 20 + (height / 2) - 6, self.magic_power, 10])
 
     def update_health_bar(self, surface):
-        if self.health >= self.max_health*0.5:
+
+        if self.health >= self.max_health:
             bar_color = (0, 183, 74)
-        elif self.max_health * 0.2 < self.health < self.max_health*0.5:
+            self.health = self.max_health
+
+        elif self.health >= self.max_health * 0.5:
+            bar_color = (0, 183, 74)
+
+        elif self.max_health * 0.2 < self.health < self.max_health * 0.5:
             bar_color = (255, 169, 0)
         else:
             bar_color = (249, 49, 84)
 
         # Dessiner la barre de vie
-        pygame.draw.rect(surface, (46, 46, 46), [self.rect.x + self.health_bar_position, self.rect.y - 15, self.max_health, 7])
+        pygame.draw.rect(surface, (46, 46, 46),
+                         [self.rect.x + self.health_bar_position, self.rect.y - 15, self.max_health, 7])
         pygame.draw.rect(surface, bar_color, [self.rect.x + self.health_bar_position, self.rect.y - 15, self.health, 7])
 
     def launch_kamehameha_right(self):
@@ -149,7 +157,8 @@ class Ninja(animation.AnimateSprite):
     def run_right(self):
         self.throw_animation = False
         self.health_bar_position = 13
-        if not self.game.check_collision(self, self.game.all_zombies_right) and not self.game.check_collision(self, self.game.all_zombies_left):
+        if not self.game.check_collision(self, self.game.all_zombies_right) and not self.game.check_collision(self,
+                                                                                                              self.game.all_zombies_left):
             self.rect.x += self.velocity
             self.animation_speed = 0.3
             self.start_animation()
@@ -168,7 +177,8 @@ class Ninja(animation.AnimateSprite):
     def run_left(self):
         self.throw_animation = False
         self.health_bar_position = -20
-        if not self.game.check_collision(self, self.game.all_zombies_right) and not self.game.check_collision(self, self.game.all_zombies_left):
+        if not self.game.check_collision(self, self.game.all_zombies_right) and not self.game.check_collision(self,
+                                                                                                              self.game.all_zombies_left):
             self.rect.x -= self.velocity
             self.animation_speed = 0.3
             self.start_animation()
@@ -263,3 +273,6 @@ class Ninja(animation.AnimateSprite):
                     self.isJump = True
                     self.jump_velocity = 20
                     self.jump_stop = -24
+
+    def gain_life(self, amount):
+        self.health += amount

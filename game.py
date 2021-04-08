@@ -29,7 +29,6 @@ class Game(pygame.sprite.Sprite):
         self.round = 0
         self.target_number = 0
         self.sound_manager = SoundManager()
-        self.spawn_heart()
 
     def game_engine(self):
         self.round += 1
@@ -75,7 +74,7 @@ class Game(pygame.sprite.Sprite):
             zombie.current_image = 0
         for zombie in self.all_zombies_left:
             zombie.current_image = 0
-        self.sound_manager.play('poof', 0.06, 0)
+        self.sound_manager.play('poof', 0.2, 0)
         self.dismiss_monsters = True
 
     def game_over(self, surface):
