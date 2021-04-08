@@ -8,12 +8,22 @@ class Heart(pygame.sprite.Sprite):
         self.game = game
         self.h_velocity = 3
         self.v_velocity = 2
+        self.v_velocity_memory = []
         self.image = pygame.image.load('assets/items/heart.png')
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect()
-        self.rect.x = 1100
+        self.rect.x = 1081
         self.rect.y = 100
         self.life = 20
+
+    def stop_move(self):
+        self.v_velocity_memory.append(self.v_velocity)
+        self.h_velocity = 0
+        self.v_velocity = 0
+
+    def start_move(self):
+        self.h_velocity = 3
+        self.v_velocity = self.v_velocity_memory[0]
 
     def remove(self):
         self.game.all_heart.remove(self)
@@ -38,11 +48,19 @@ class Flask(pygame.sprite.Sprite):
         self.game = game
         self.attack = 25
         self.velocity = random.randint(1, 3)
+        self.velocity_memory = []
         self.image = pygame.image.load('assets/items/flask.png')
         self.image = pygame.transform.scale(self.image, (63, 50))
         self.rect = self.image.get_rect()
-        self.rect.x = 1100
+        self.rect.x = 1081
         self.rect.y = 620
+
+    def stop_move(self):
+        self.velocity_memory.append(self.velocity)
+        self.velocity = 0
+
+    def start_move(self):
+        self.velocity = self.velocity_memory[0]
 
     def remove(self):
         self.game.all_flask.remove(self)

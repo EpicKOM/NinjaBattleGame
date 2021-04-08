@@ -22,6 +22,8 @@ class Game(pygame.sprite.Sprite):
         self.game_finish = False
         self.finish_scene = True
         self.kamehameha_mode = False
+        self.kill_before_kamehameha = 0
+        self.kill_after_kamehameha = 0
         self.game_results = False
         self.game_replay = False
         self.game_time = 0
@@ -74,6 +76,11 @@ class Game(pygame.sprite.Sprite):
             zombie.current_image = 0
         for zombie in self.all_zombies_left:
             zombie.current_image = 0
+        for heart in self.all_heart:
+            heart.kill()
+        for poison in self.all_flask:
+            poison.kill()
+
         self.sound_manager.play('poof', 0.2, 0)
         self.dismiss_monsters = True
 

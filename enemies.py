@@ -94,14 +94,21 @@ class Zombie(animation.AnimateSprite):
             if self.rect.x <= self.game.player.rect.x:
                 self.start_animation()
                 self.zombie_attack = True
-                self.game.player.damage(self.attack)
                 self.animation_speed = 0.08
+                if self.game.player.rect.y > 476:
+                    self.game.player.damage(self.attack)
+                if self.game.kamehameha_mode:
+                    self.game.player.damage(0)
+
             else:
                 self.start_animation()
                 self.attack_reverse = True
                 self.zombie_attack = True
-                self.game.player.damage(self.attack)
                 self.animation_speed = 0.08
+                if self.game.player.rect.y > 476:
+                    self.game.player.damage(self.attack)
+                if self.game.kamehameha_mode:
+                    self.game.player.damage(0)
 
     def move_left(self):
         if not self.game.check_collision(self, self.game.player_group) or self.game.kamehameha_mode:

@@ -45,7 +45,7 @@ ZOMBIES_SCREAM = pygame.USEREVENT + 1
 HEART_BONUS = pygame.USEREVENT + 2
 POISON = pygame.USEREVENT + 3
 
-pygame.time.set_timer(ZOMBIES_SCREAM, 15000)
+pygame.time.set_timer(ZOMBIES_SCREAM, 12000)
 pygame.time.set_timer(HEART_BONUS, 105000)
 pygame.time.set_timer(POISON, 60000)
 
@@ -98,7 +98,6 @@ while running:
 
     # Partie en cours
     else:
-
         # Gestion du déclenchement d'un nouveau niveau
         # -------------------------------------------------------------------------------
         if game.monster_counter >= game.target_number:
@@ -182,11 +181,14 @@ while running:
                 zombie.animate('zombie', 'disappear')
                 if zombie.end_animation:
                     zombie.kill()
-                    game.all_zombies_right.empty()
-
+                    game.all_zombies_left.empty()
+            print(game.all_zombies_right)
+            print(game.all_zombies_left)
+            print(len(game.all_zombies_left))
+            print(len(game.all_zombies_right))
             if len(game.all_zombies_right) <= 0 and len(game.all_zombies_left) <= 0:
                 game.dismiss_monsters = False
-                pygame.time.wait(20)
+                pygame.time.wait(40)
                 game.game_finish = True
 
         else:
@@ -269,12 +271,28 @@ while running:
                     else:
                         zombie.current_image = 0
 
+                for heart in game.all_heart:
+                    heart.stop_move()
+
+                for poison in game.all_flask:
+                    poison.stop_move()
+
             if kamehameha.end_animation:
                 for zombie in game.all_zombies_right:
                     zombie.start_move()
                 for zombie in game.all_zombies_left:
                     zombie.start_move()
-                game.sound_manager.play('fatality', 0.9, 0)
+                for heart in game.all_heart:
+                    heart.start_move()
+                for poison in game.all_flask:
+                    poison.start_move()
+
+                game.kill_after_kamehameha = game.kill
+                if game.kill_before_kamehameha == game.kill_after_kamehameha:
+                    game.sound_manager.play('nope', 0.2, 0)
+                else:
+                    game.sound_manager.play('fatality', 0.9, 0)
+
                 game.player.idle_right()
                 game.player.start_move()
                 kamehameha.remove_right()
@@ -320,12 +338,28 @@ while running:
                     else:
                         zombie.current_image = 0
 
+                for heart in game.all_heart:
+                    heart.stop_move()
+
+                for poison in game.all_flask:
+                    poison.stop_move()
+
             if kamehameha.end_animation:
                 for zombie in game.all_zombies_right:
                     zombie.start_move()
                 for zombie in game.all_zombies_left:
                     zombie.start_move()
-                game.sound_manager.play('fatality', 0.9, 0)
+                for heart in game.all_heart:
+                    heart.start_move()
+                for poison in game.all_flask:
+                    poison.start_move()
+
+                game.kill_after_kamehameha = game.kill
+                if game.kill_before_kamehameha == game.kill_after_kamehameha:
+                    game.sound_manager.play('nope', 0.2, 0)
+                else:
+                    game.sound_manager.play('fatality', 0.9, 0)
+
                 game.player.idle_left()
                 game.player.start_move()
                 kamehameha.remove_left()
@@ -400,6 +434,7 @@ while running:
 
             elif event.key == pygame.K_q and not game.game_finish and len(game.player.all_kamehameha_right) < 1 and len(game.player.all_kamehameha_left) < 1:
                 if game.player.magic_power >= game.player.max_magic_power:
+                    game.kill_before_kamehameha = game.kill
                     game.kamehameha_mode = True
                     game.sound_manager.play('bazooka', 0.5, 0)
                     game.player.throw_kamehameha = True
