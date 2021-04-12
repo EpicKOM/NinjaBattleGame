@@ -50,6 +50,8 @@ class Game(pygame.sprite.Sprite):
             self.spawn_left_zombie()
             spawn_left_counter += 1
 
+        self.sound_manager.play('ambience', 0.6, -1)
+
     def spawn_right_zombie(self):
         zombie_right = Zombie(self)
         zombie_right.rect.x = 1080 + random.randint(0, 300)

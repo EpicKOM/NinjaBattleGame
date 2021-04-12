@@ -46,8 +46,8 @@ HEART_BONUS = pygame.USEREVENT + 2
 POISON = pygame.USEREVENT + 3
 
 pygame.time.set_timer(ZOMBIES_SCREAM, 12000)
-pygame.time.set_timer(HEART_BONUS, 105000)
-pygame.time.set_timer(POISON, 60000)
+pygame.time.set_timer(HEART_BONUS, 120000)
+pygame.time.set_timer(POISON, 45000)
 
 
 game = Game()
@@ -78,6 +78,7 @@ while running:
                 pygame.mixer.stop()
             if pygame.mixer.music.get_busy():
                 pygame.mixer.music.stop()
+
             game.player.animation = True
             game.sound_manager.play('game_over', 0.2, 0)
             game.finish_scene = False
@@ -114,6 +115,7 @@ while running:
                     zombie.kill()
 
             if len(game.all_zombies_left) <= 0 and len(game.all_zombies_right) <= 0:
+                game.sound_manager.stop('ambience')
                 if game.round % 2 == 0:
                     pygame.mixer.music.set_endevent(ROUND_SONG_END)
                     pygame.mixer.music.load('assets/music/new_round_pair.mp3')
@@ -133,6 +135,7 @@ while running:
         # Affichage de l'icone magie
         screen.blit(magic_icon, (20, 20))
         round_text = font_rounds.render(f'{game.round}', True, (249, 49, 84))
+
         screen.blit(rounds_image, ((240 - rounds_image.get_width())/2 + 20, 40 + magic_icon.get_width()))
         screen.blit(round_text, (100 + (rounds_image.get_width() - round_text.get_width()) / 2, 74))
 
@@ -182,10 +185,7 @@ while running:
                 if zombie.end_animation:
                     zombie.kill()
                     game.all_zombies_left.empty()
-            print(game.all_zombies_right)
-            print(game.all_zombies_left)
-            print(len(game.all_zombies_left))
-            print(len(game.all_zombies_right))
+
             if len(game.all_zombies_right) <= 0 and len(game.all_zombies_left) <= 0:
                 game.dismiss_monsters = False
                 pygame.time.wait(40)
@@ -196,7 +196,7 @@ while running:
                 zombie.move_left()
                 zombie.animate('zombie', f'{zombie.random_zombie}walk_left')
                 if zombie.rect.x == 1080:
-                    zombie_sound = random.choice(['zombie_1', 'zombie_2', 'zombie_3', 'zombie_6', 'zombie_7'])
+                    zombie_sound = random.choice(['zombie_1', 'zombie_2', 'zombie_3', 'zombie_6'])
                     game.sound_manager.play(f'{zombie_sound}', 0.1, 0)
 
                 if zombie.zombie_attack and not zombie.attack_reverse:
@@ -209,7 +209,7 @@ while running:
                 zombie.move_right()
                 zombie.animate('zombie', f'{zombie.random_zombie}walk_right')
                 if zombie.rect.x == 0:
-                    zombie_sound = random.choice(['zombie_1', 'zombie_2', 'zombie_3', 'zombie_6', 'zombie_7'])
+                    zombie_sound = random.choice(['zombie_1', 'zombie_2', 'zombie_3', 'zombie_6'])
                     game.sound_manager.play(f'{zombie_sound}', 0.1, 0)
                 if zombie.zombie_attack and not zombie.attack_reverse:
                     zombie.animate('zombie', f'{zombie.random_zombie}attack_right')
@@ -243,8 +243,10 @@ while running:
                 kamehameha.animate('kamehameha', 'kame_right')
                 for zombie in game.all_zombies_right:
                     zombie.stop_move()
-                    if game.check_collision(zombie, game.player.all_kamehameha_right):
+                    if game.check_collision(zombie, game.player_group):
+                        zombie.kamehameha_damage()
 
+                    if game.check_collision(zombie, game.player.all_kamehameha_right):
                         if zombie.rect.x < 1080:
                             zombie.animation_speed = 0.2
                             zombie.animate('zombie', 'disappear')
@@ -258,8 +260,8 @@ while running:
 
                 for zombie in game.all_zombies_left:
                     zombie.stop_move()
-                    if game.check_collision(zombie, game.player.all_kamehameha_right):
 
+                    if game.check_collision(zombie, game.player.all_kamehameha_right):
                         if zombie.rect.x > 0 - zombie.image.get_width():
                             zombie.animation_speed = 0.2
                             zombie.animate('zombie', 'disappear')
@@ -310,8 +312,11 @@ while running:
 
                 for zombie in game.all_zombies_left:
                     zombie.stop_move()
-                    if game.check_collision(zombie, game.player.all_kamehameha_left):
 
+                    if game.check_collision(zombie, game.player_group):
+                        zombie.kamehameha_damage()
+
+                    if game.check_collision(zombie, game.player.all_kamehameha_left):
                         if zombie.rect.x > 0 - zombie.image.get_width():
                             zombie.animation_speed = 0.2
                             zombie.animate('zombie', 'disappear')
@@ -465,11 +470,9 @@ while running:
             game.game_engine()
 
         elif event.type == ZOMBIES_SCREAM and len(game.all_zombies_left) > 0 and len(game.all_zombies_right) > 0:
-            if pygame.mixer.get_busy():
-                pass
-            else:
-                zombie_sound = random.choice(['zombie_4', 'zombie_5'])
-                game.sound_manager.play(f'{zombie_sound}', 0.1, 0)
+
+            if pygame.mixer.get_busy() == 1:
+                game.sound_manager.play('zombie_4', 0.1, 0)
 
         elif event.type == HEART_BONUS and len(game.all_zombies_left) > 0 and len(game.all_zombies_right) > 0:
             game.spawn_heart()
