@@ -13,7 +13,7 @@ As the game progresses, your hero will earn **magic skills**.
 ![Alt Text](https://github.com/EpicKOM/NinjaBattleGame/blob/main/screenshots/screen2.PNG?raw=true)
 
 
-The game is sequenced in **rounds**.
+The game is sequenced in **rounds**.  
 With each new round, the difficulty increases. 
 
 
@@ -47,7 +47,7 @@ Average duration of a game: about 15 minutes
   * Key Space: Jump
   * Key D: Launch Kunai
   * Key Z (Magic Required): Launch Fireball
-  * Key Q (Magic Required): Ultime KO Beam
+  * Key Q (Magic Required): Ultimate KO Beam
   * Key Escape: Quit
 
 ### Enjoy the game ! =)
