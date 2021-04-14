@@ -45,7 +45,7 @@ ZOMBIES_SCREAM = pygame.USEREVENT + 1
 HEART_BONUS = pygame.USEREVENT + 2
 POISON = pygame.USEREVENT + 3
 
-pygame.time.set_timer(ZOMBIES_SCREAM, 12000)
+pygame.time.set_timer(ZOMBIES_SCREAM, 11000)
 pygame.time.set_timer(HEART_BONUS, 120000)
 pygame.time.set_timer(POISON, 45000)
 
