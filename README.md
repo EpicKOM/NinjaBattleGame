@@ -38,5 +38,16 @@ Average duration of a game: about 15 minutes
   cd NinjaBattleGame  
   pip3 install -r requirements.txt  
   #### Then run the command python3 main.py
+  
+  
+  ### **Controls**
+  
+  * Key Left: Run Left
+  * Key Right: Run Right
+  * Key Space: Jump
+  * Key D: Launch Kunai
+  * Key Z (Magic Required): Launch Fireball
+  * Key Q (Magic Required): Ultime KO Beam
+  * Key Escape: Quit
 
 ### Enjoy the game ! =)
